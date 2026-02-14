@@ -1,0 +1,72 @@
+[
+  {
+    "id": "011",
+    "full_name": "ماجد وليد الحارثي",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/flagged/photo-1553642618-de0381320ff3?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مدير إداري قانوني متخصص في هيكلة الإدارات القانونية للشركات المساهمة وضمان الامتثال للأنظمة المحلية."
+  },
+  {
+    "id": "012",
+    "full_name": "ريم منصور السياري",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1581065178047-8ee15951ede6?q=80&w=415&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "محامية متخصصة في قضايا التكنولوجيا المالية (FinTech) وصياغة اتفاقيات مستوى الخدمة للمنصات الرقمية."
+  },
+  {
+    "id": "013",
+    "full_name": "طارق زياد المسعود",
+    "role": "إداري",
+    "image": "https://plus.unsplash.com/premium_photo-1682430333521-0a4f4f3c610e?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبير في إدارة المخاطر القانونية والتدقيق الداخلي، يمتلك خبرة واسعة في مراجعة العقود الحكومية المعقدة."
+  },
+  {
+    "id": "014",
+    "full_name": "داليا عبد الرحمن الراشد",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1641956198771-e88cca8dba24?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مستشارة إدارية قانونية متخصصة في شؤون الموارد البشرية وتطوير اللوائح التنظيمية الداخلية للمؤسسات."
+  },
+  {
+    "id": "015",
+    "full_name": "سلطان ناصر العتيبي",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "محامي مرافعات مختص في القانون التجاري والنزاعات العقارية، مع تركيز على قضايا الاستثمار الأجنبي المباشر."
+  },
+  {
+    "id": "016",
+    "full_name": "لمياء صالح المهدي",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1573165850883-9b0e18c44bd2?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبيرة في صياغة التشريعات والسياسات العامة، عملت كمديرة للمراجعة القانونية في عدة جهات حكومية."
+  },
+  {
+    "id": "017",
+    "full_name": "باسل عصام الخالدي",
+    "role": "إداري",
+    "image": "https://plus.unsplash.com/premium_photo-1658506802808-172790d1d76c?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مدير مكتب محاماة متخصص في العمليات التشغيلية القانونية (Legal Ops) وتحسين كفاءة الأداء القانوني."
+  },
+  {
+    "id": "018",
+    "full_name": "أمل يوسف العمراني",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1729250829666-2fa142d19e98?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "محامية متخصصة في قانون حماية المستهلك والمنافسة، وتقديم الاستشارات القانونية لشركات التجزئة الكبرى."
+  },
+  {
+    "id": "019",
+    "full_name": "منصور فهد الدوسري",
+    "role": "إداري",
+    "image": "https://plus.unsplash.com/premium_photo-1658506816013-f224f2b331ab?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مستشار قانوني إداري متخصص في قضايا الإفلاس وإعادة الهيكلة المالية للشركات المتعثرة."
+  },
+  {
+    "id": "020",
+    "full_name": "فاطمة خالد النعيمي",
+    "role": "إداري",
+    "image": "https://images.unsplash.com/photo-1618825171512-9632ddde3725?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبيرة في القانون البيئي وحوكمة الاستدامة (ESG)، تقدم حلولاً قانونية للمشاريع الصناعية الكبرى."
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "001",
+    "full_name": "Ahmed Mahmoud Al-Shammari",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Expert legal consultant in international commercial law and dispute resolution, with 15 years of experience in high-stakes contracting."
+  },
+  {
+    "id": "002",
+    "full_name": "Sarah Hassan Al-Amiri",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Specialist in IP law and cybercrime, focused on protecting technical innovations for emerging startups."
+  },
+  {
+    "id": "003",
+    "full_name": "Faisal Khalid Bin Sultan",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Lawyer and Sharia consultant excelling in inheritance and endowment cases, and a researcher in comparative judicial systems."
+  },
+  {
+    "id": "004",
+    "full_name": "Layla Youssef Al-Idrisi",
+    "role": "Consultant",
+    "image": "https://plus.unsplash.com/premium_photo-1663011155452-5ee83007dccd?q=80&w=855&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Expert in administrative law and corporate governance, contributing to the development of internal policies for government entities."
+  },
+  {
+    "id": "005",
+    "full_name": "Omar Abdulaziz Al-Madani",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1629425733761-caae3b5f2e50?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Consultant specialized in real estate law and foreign investment, with a proven track record in mergers and acquisitions (M&A)."
+  },
+  {
+    "id": "006",
+    "full_name": "Mona Ibrahim Al-Qahtani",
+    "role": "Consultant",
+    "image": "https://plus.unsplash.com/premium_photo-1661583972209-4aa334e5e2b1?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Legal professional specialized in labor rights and international labor legislation, aiming to foster fair and sustainable work environments."
+  },
+  {
+    "id": "007",
+    "full_name": "Zaid Kareem Al-Jubouri",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1562788869-4ed32648eb72?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Expert in international arbitration and maritime law, having represented global firms in shipping and trade disputes."
+  },
+  {
+    "id": "008",
+    "full_name": "Hind Marwan Al-Tamimi",
+    "role": "Consultant",
+    "image": "https://images.unsplash.com/photo-1590649778473-d017b9013d2a?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Consultant in criminal law and justice, focusing on providing preventive legal advice to financial institutions."
+  },
+  {
+    "id": "009",
+    "full_name": "Yassin Ahmed Al-Fayed",
+    "role": "Consultant",
+    "image": "https://plus.unsplash.com/premium_photo-1682094414798-4f6726661902?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Specialist in tax law and Islamic finance, assisting banks in developing Sharia-compliant financial products."
+  },
+  {
+    "id": "010",
+    "full_name": "Noura Fahd Al-Sudairi",
+    "role": "Consultant",
+    "image": "https://plus.unsplash.com/premium_photo-1661274056744-0e57ad9e2fb1?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "Expert in data protection and digital privacy, providing legal counsel to keep pace with rapid digital transformation."
+  }
+]

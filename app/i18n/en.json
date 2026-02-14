@@ -1,0 +1,220 @@
+{
+  "home": "Hood bin Adel law firm",
+  "title": "Hood bin Adel law firm | {{ title }}",
+  "description": "Hood bin Adel Law Firm | Decades of legal expertise in complex strategies and corporate representation. Your trusted partner for justice and rights protection.",
+  "learn_more": "Learn More",
+  "back": "Back",
+  "close": "Close",
+  "link": {
+    "home": "Homepage",
+    "about": "About Us",
+    "services": "Our Services",
+    "contact": "Contact Us",
+    "careers": "Careers",
+    "blog": "Blog"
+  },
+  "footer": {
+    "contact_title": "Contact Information",
+    "address_text": "Pacific Ocean, Power Tower, 133rd Floor, Office",
+    "quick_links": "Quick Links",
+    "legal": "Legal Links",
+    "terms_and_conditions": "Terms & Conditions",
+    "privacy_policy": "Privacy Policy",
+    "cookies_policy": "Cookie Policy",
+    "follow_us": "Follow Us",
+    "rights": "All rights reserved to Hood bin Adel Law Firm & Legal Consultations © 2025"
+  },
+  "whatsapp": {
+    "title": "Contact Us on WhatsApp",
+    "qr_label": "Scan the QR code to chat directly",
+    "placeholder": "Type your message here...",
+    "online": "Online Now",
+    "send": "Start Chatting"
+  },
+  "hero": {
+    "name": "Hood bin Adel",
+    "lawfirm": "Law Firm and Legal Consulations",
+    "description": "At Hood bin Adel Law Firm, we strive to provide honest and effective legal services that support and strengthen the values of justice within society. We believe that the fair application of the law is the fundamental way to correct social trajectories and build a more stable and prosperous future for all.",
+    "watch_video": "Watch the Introductory Video",
+    "consult": "Book your legal consulations"
+  },
+  "awards": {
+    "title": "Awards & Recognitions"
+  },
+  "testimonials": {
+    "title": "Testimonials"
+  },
+  "map": {
+    "title": "Our Location",
+    "address_label": "Address",
+    "working_hours_label": "Working Hours"
+  },
+  "about": {
+    "description": "Discover excellence at Hood bin Adel Law Firm. Led by Mr. Hood bin Adel Al-Qadi, we blend profound legal heritage with modern vision to deliver exceptional legal solutions.",
+    "hero": {
+      "founder": "The Founder",
+      "founderName": "Mr. Hood bin Adel Al-Qadi",
+      "founderBio": "Founder of Hood bin Adel Law Firm, has extensive legal experience. His deep legal background forms the foundation of the firm’s strong reputation and professional standards."
+    },
+    "team": {
+      "consultants": "Consultants",
+      "admins": "Administrators"
+    },
+    "identity": {
+      "vision": {
+        "title": "Vision",
+        "text": "To be the leading legal benchmark in the region, setting standards for excellence and integrity."
+      },
+      "mission": {
+        "title": "Mission",
+        "text": "Protecting our clients' interests through innovative legal strategies and unwavering commitment to justice."
+      },
+      "values": {
+        "title": "Values",
+        "text": "Integrity, Transparency, and Excellence are the cornerstones of every case we handle."
+      }
+    }
+  },
+  "services": {
+    "description": "Explore our comprehensive legal services, from litigation and arbitration to corporate consulting and intellectual property. Years of expertise in protecting clients' interests and crafting innovative legal strategies to secure your rights.",
+    "hero": {
+      "tag": "Our Services",
+      "title": "Comprehensive Legal Solutions",
+      "description": "Our commitment goes beyond routine legal procedures , we carefully analyse each case to understand its unique complexities, then craft tailored strategies that align with our client’s goals. With a deep understanding of the law and a proactive mindset, we anticipate challenges before they arise and respond with effective, timely solutions. This level of dedication and foresight ensures that our clients feel confident and supported at every step, no matter how complex the legal issue may be."
+    },
+    "items": {
+      "general": {
+        "title": "General Legal Services",
+        "description": "Comprehensive litigation and dispute resolution across all legal domains."
+      },
+      "corporate": {
+        "title": "Corporate Law",
+        "description": "Strategic legal advisory for businesses, mergers, and commercial transactions."
+      },
+      "ip": {
+        "title": "Intellectual Property",
+        "description": "Protecting your innovations, trademarks, and creative assets globally."
+      }
+    }
+  },
+  "contact": {
+    "description": "Explore our comprehensive legal services, from litigation and arbitration to corporate consulting and intellectual property. Years of expertise in protecting clients' interests and crafting innovative legal strategies to secure your rights.",
+    "map": {
+      "our_location": "Our Office Location",
+      "click_to_activate": "Click to Activate Map",
+      "tap_to_activate": "Tap to Activate Map"
+    },
+    "form": {
+      "title": "Request a Consultation",
+      "subject": "Type of Service",
+      "message": "Message",
+      "submit": "Submit",
+      "sending": "Sending..."
+    },
+    "toast": {
+      "success_message": "Your consultation request has been sent successfully and we will get back to you as soon as possible."
+    },
+    "sendEmail": {
+      "newConsultation": "New Consultation",
+      "officeGate": "Office Gate",
+      "legalOffice": "Legal Office",
+      "consultationDetails": "Details of the Consultation Received",
+      "clientName": "Client Name",
+      "consultationSubject": "Consultation Subject",
+      "fromWebsite": "Sent from the Official Website"
+    }
+  },
+  "blog": {
+    "description": "Explore our knowledge hub where legal expertise meets multimedia. Stay updated with the latest firm news, watch in-depth visual legal analysis on our Video Blog, and listen to professional discussions via our Podcast. We provide specialized articles designed to enhance legal awareness and cover legislative updates with clarity and professional rigor.",
+    "heading": "Office Blog",
+    "describe": "Follow the latest legal news and awareness articles provided by the experts at Hood bin Adel Law Firm.",
+    "loading": "Loading",
+    "noArticle": "There are currently no articles in this section.",
+    "noArticleMessage": "Please choose another section or come back later.",
+    "category": {
+      "video": "Video",
+      "audio": "Audio",
+      "news": "Office News"
+    }
+  },
+  "article": {
+    "last_modified": "Last modified",
+    "prev_article": "Previous Article",
+    "next_article": "Next Article"
+  },
+  "careers": {
+    "description": "Are you looking for an inspiring legal career? Explore job opportunities at our firm, where we believe in empowering talent and providing a professional environment that fosters legal innovation and excellence. Apply now and join an elite group of consultants and lawyers in a workplace that values passion and continuous professional growth.",
+    "heading": "Careers",
+    "describe": "We are always looking for talented and passionate people in the legal field to make a difference with us.",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "loading": "Loading...",
+    "jobType": "Job Type",
+    "experience": "Experience",
+    "deadline": "Deadline",
+    "jobDescription": "Job Description",
+    "duties": "Duties & Responsibilities",
+    "requirements": "Job Requirements",
+    "expectations": "Expectations",
+    "notes": "Additional Notes",
+    "jobApplication": "Job Application Form",
+    "applyingFor": "Applying for",
+    "apply": "Apply",
+    "opportunities": "Opportunities Number",
+    "full_time": "Full Time",
+    "part_time": "Part Time",
+    "internship": "Internship",
+    "applicationReceived": "Your application has been received successfully",
+    "applicationReceivedDesc": "Thank you for your interest in joining our team. We will review your application and contact you shortly.",
+    "form": {
+      "resume": "Resume (PDF)",
+      "uploadResumeDesc": "Please upload your resume in PDF format. Make sure the file size does not exceed {{ size }} megabytes.",
+      "coverLetter": "Cover Letter",
+      "submitApplication": "Submit Application",
+      "submitting": "Submitting..."
+    }
+  },
+  "404": {
+    "title": "Page Not Found",
+    "heading": "Page Not Found",
+    "describe": "It seems you've taken an incorrect legal path. The page you are looking for is currently unavailable.",
+    "back_home": "Back to Home"
+  },
+  "form": {
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone": "Phone Number"
+  },
+  "toast": {
+    "success_title": "Successfully Sent",
+    "error_title": "An Error Occurred",
+    "recaptcha_not_ready": "ReCAPTCHA is not ready",
+    "error_retry": "An error occurred while sending the request. Please try again later."
+  },
+  "errors": {
+    "field_required": "This's field is required.",
+    "too_short_name": "The name is too short.",
+    "too_long_name": "The name is too long.",
+    "invalid_email": "Email is Invalid.",
+    "invalid_phone": "Phone number is Invalid.",
+    "message_too_short": "The message is too short.",
+    "file_too_large": "The file size exceeds the limit.",
+    "invalid_file_type": "Invalid file type. Please upload a valid PDF.",
+    "error_fetching_data": "Unable to fetch data at the moment.",
+    "retry_fetch": "Retry",
+    "no_data_stats": "No statistics available at the moment.",
+    "no_data_services": "No services available at the moment.",
+    "error_general": {
+      "heading": "An unexpected error occurred",
+      "describe": "Sorry, something went wrong while processing your request. We apologize for the inconvenience."
+    },
+    "whatsapp": {
+      "title": "WhatsApp Chat",
+      "placeholder": "Type your message here...",
+      "qr_label": "Scan QR to contact directly",
+      "send": "Start Chat",
+      "phone": "+974 3022 8438"
+    }
+  }
+}

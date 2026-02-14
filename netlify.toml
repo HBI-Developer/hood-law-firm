@@ -1,0 +1,21 @@
+[build]
+command = "pnpm run build"
+publish = "build/client"
+
+[dev]
+command = "pnpm dev"
+
+[functions]
+directory = "build/server"
+included_files = ["hoodbinadel"]
+
+[[redirects]]
+from = "/*"
+to = "/.netlify/functions/server"
+status = 200
+
+[[redirects]]
+from = "/*.data"
+to = "/.netlify/functions/server"
+force = true
+status = 200

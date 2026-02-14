@@ -1,0 +1,72 @@
+[
+  {
+    "id": "001",
+    "full_name": "أحمد محمود الشمري",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مستشار قانوني خبير في القانون التجاري الدولي وفض النزاعات، خبرة 15 عاماً في صياغة العقود الكبرى."
+  },
+  {
+    "id": "002",
+    "full_name": "سارة حسن العامري",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "متخصصة في قوانين الملكية الفكرية والجرائم المعلوماتية، تعمل على حماية الابتكارات التقنية للشركات الناشئة."
+  },
+  {
+    "id": "003",
+    "full_name": "فيصل خالد بن سلطان",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "محامٍ ومستشار شرعي متفوق في قضايا الميراث والأوقاف، وباحث في الأنظمة القضائية المقارنة."
+  },
+  {
+    "id": "004",
+    "full_name": "ليلى يوسف الإدريسي",
+    "role": "مستشار",
+    "image": "https://plus.unsplash.com/premium_photo-1663011155452-5ee83007dccd?q=80&w=855&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبيرة في القانون الإداري وحوكمة الشركات، تساهم في تطوير السياسات الداخلية للمؤسسات الحكومية."
+  },
+  {
+    "id": "005",
+    "full_name": "عمر عبد العزيز المدني",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1629425733761-caae3b5f2e50?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مستشار متخصص في قوانين العقارات والاستثمار الأجنبي، لديه سجل حافل في إتمام عمليات الدمج والاستحواذ."
+  },
+  {
+    "id": "006",
+    "full_name": "منى إبراهيم القحطاني",
+    "role": "مستشار",
+    "image": "https://plus.unsplash.com/premium_photo-1661583972209-4aa334e5e2b1?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "قانونية متخصصة في حقوق العمال وتشريعات العمل الدولية، تهدف إلى تعزيز بيئة عمل عادلة ومستدامة."
+  },
+  {
+    "id": "007",
+    "full_name": "زيد كريم الجبوري",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1562788869-4ed32648eb72?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبير في التحكيم الدولي والقانون البحري، مثل العديد من الشركات العالمية في قضايا الملاحة والتجارة."
+  },
+  {
+    "id": "008",
+    "full_name": "هند مروان التميمي",
+    "role": "مستشار",
+    "image": "https://images.unsplash.com/photo-1590649778473-d017b9013d2a?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "مستشارة في القانون الجنائي والعدالة الجنائية، تركز على تقديم الاستشارات الوقائية للمؤسسات المالية."
+  },
+  {
+    "id": "009",
+    "full_name": "ياسين أحمد الفايد",
+    "role": "مستشار",
+    "image": "https://plus.unsplash.com/premium_photo-1682094414798-4f6726661902?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "متخصص في قوانين الضرائب والتمويل الإسلامي، يساعد البنوك في تطوير منتجات متوافقة مع الشريعة."
+  },
+  {
+    "id": "010",
+    "full_name": "نورة فهد السديري",
+    "role": "مستشار",
+    "image": "https://plus.unsplash.com/premium_photo-1661274056744-0e57ad9e2fb1?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "bio": "خبيرة في حماية البيانات والخصوصية الرقمية، تقدم استشارات قانونية لمواكبة التحول الرقمي السريع."
+  }
+]

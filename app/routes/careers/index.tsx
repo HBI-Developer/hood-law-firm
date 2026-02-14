@@ -1,0 +1,325 @@
+import { useState, useEffect } from "react";
+import { getFixedT } from "~/i18n/server";
+import {
+  data,
+  type LoaderFunctionArgs,
+  useLoaderData,
+  redirect,
+  useParams,
+  useFetcher,
+} from "react-router";
+import { useTranslation } from "react-i18next";
+import { db } from "~/databases/config.server";
+import { careers as careersTable } from "~/databases/schema";
+import { count, eq, desc } from "drizzle-orm";
+import { EmptyState, JobDetailsDialog, JobPanel } from "./components";
+import { Icon } from "@iconify/react";
+import type { Job } from "~/data/jobs";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "~/store";
+import { NavLink } from "~/components";
+import { CAREERS_IN_PAGE } from "~/constants";
+import { isHiddenOverflow, isVisibleOverflow } from "~/store/slices/loading";
+export { action } from "./actions/sendApplication";
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const t = await getFixedT(request);
+  const locale = params.lang || "en";
+  const url = new URL(request.url);
+
+  // Validate page parameter
+  let page = parseInt(params.page || "1");
+  if (isNaN(page) || page < 1) {
+    return redirect(`${url.origin}/${locale}/careers`);
+  }
+
+  // Fetch total count for pagination
+  const [totalCountResult] = await db
+    .select({ value: count() })
+    .from(careersTable)
+    .where(eq(careersTable.lang, locale));
+
+  const totalCount = totalCountResult?.value || 0;
+  const totalPages = Math.ceil(totalCount / CAREERS_IN_PAGE);
+
+  // If page is out of bounds, redirect to last page or 1
+  if (totalPages > 0 && page > totalPages) {
+    url.searchParams.set("page", totalPages.toString());
+    return redirect(url.toString());
+  }
+
+  // Fetch paginated jobs
+  const jobs = await db.query.careers.findMany({
+    where: eq(careersTable.lang, locale),
+    limit: CAREERS_IN_PAGE,
+    offset: (page - 1) * CAREERS_IN_PAGE,
+    orderBy: [desc(careersTable.id)],
+  });
+
+  return data({
+    jobs: jobs as Job[],
+    pagination: {
+      currentPage: page,
+      totalPages,
+      totalCount,
+    },
+    metaTags: {
+      title: t("title", { title: t("link.careers") }),
+      description: t("careers.description") || "Join our team",
+    },
+  });
+};
+
+// @ts-expect-error TypeScript Analyzer is wrong
+export function meta({ data }: typeof loader) {
+  if (!data) return [{ title: "Law Firm" }];
+
+  const { title, description } = data.metaTags;
+
+  return [{ title }, { name: "description", content: description }];
+}
+
+export default function Careers() {
+  const { t } = useTranslation();
+  const { jobs, pagination } = useLoaderData<typeof loader>();
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const fetcher = useFetcher();
+  const direction = useSelector((state: RootState) => state.language.direction);
+  const dispatch = useDispatch();
+  const { page } = useParams();
+
+  // Handle loading state on navigation
+  useEffect(() => {
+    setIsLoading(false);
+  }, [jobs]);
+
+  useEffect(() => {
+    if (!!selectedJob) {
+      dispatch(isHiddenOverflow());
+    } else {
+      dispatch(isVisibleOverflow());
+    }
+
+    return () => {
+      dispatch(isVisibleOverflow());
+    };
+  }, [selectedJob]);
+
+  // Update jobs when fetcher completes
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data) {
+      setIsLoading(false);
+    }
+  }, [fetcher.data, fetcher.state]);
+
+  const handleRefresh = () => {
+    setIsLoading(true);
+    const url = new URL(window.location.href);
+    fetcher.load(url.pathname + url.search);
+  };
+
+  const createPageUrl = (pageNumber: number) => {
+    const params = useParams();
+    return `/${params.lang}/careers/${pageNumber}`;
+  };
+
+  return (
+    <div className="w-full relative min-h-[60vh]">
+      <div className="px-4 py-8 md:py-12 rtl:text-right">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+          <div className="text-center md:text-right md:rtl:text-right md:ltr:text-left">
+            <h1 className="text-4xl md:text-5xl font-bold text-secondary mb-4 font-primary">
+              {t("careers.heading") || "انضم إلى فريقنا"}
+            </h1>
+            <p className="text-lg text-secondary/80 max-w-2xl font-secondary">
+              {t("careers.describe") ||
+                "نبحث دائماً عن الموهوبين والشغوفين في المجال القانوني ليصنعوا معنا الفرق."}
+            </p>
+          </div>
+
+          <button
+            onClick={handleRefresh}
+            disabled={isLoading}
+            className={`
+              flex items-center gap-2 px-6 py-3 rounded-sm
+              bg-side-2 text-secondary font-bold
+              shadow-md hover:shadow-lg hover:bg-white
+              transition-all duration-300
+              ${isLoading ? "opacity-70 cursor-wait" : ""}
+            `}
+          >
+            <Icon
+              icon="heroicons:arrow-path"
+              className={`w-5 h-5 ${isLoading ? "animate-spin" : ""}`}
+            />
+            <span className="font-secondary tracking-wide text-lg">
+              {isLoading
+                ? t("careers.refreshing") || "جاري التحديث..."
+                : t("careers.refresh") || "تحديث البيانات"}
+            </span>
+          </button>
+        </div>
+
+        <div className="relative min-h-50">
+          {isLoading && (
+            <div
+              className={`absolute inset-0 z-10 bg-primary/60 backdrop-blur-[2px] flex items-start justify-center pt-20 transition-all duration-500 rounded-sm`}
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-side-2 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-secondary font-bold text-lg font-secondary">
+                  {t("careers.loading") || "جاري التحميل..."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div
+            className={`space-y-6 transition-opacity duration-500 ${isLoading ? "opacity-40" : "opacity-100"}`}
+          >
+            {jobs.length > 0 ? (
+              <>
+                <div className="space-y-6">
+                  {jobs.map((job) => (
+                    <JobPanel key={job.id} job={job} onApply={setSelectedJob} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-12 pb-8">
+                    {pagination.currentPage > 1 ? (
+                      <NavLink
+                        to={createPageUrl(pagination.currentPage - 1)}
+                        className="p-2 rounded-sm border border-secondary/10 hover:bg-secondary/5 transition-colors"
+                      >
+                        <Icon
+                          icon={
+                            direction === "rtl"
+                              ? "heroicons:chevron-right"
+                              : "heroicons:chevron-left"
+                          }
+                          className="w-6 h-6 text-secondary"
+                        />
+                      </NavLink>
+                    ) : (
+                      <button
+                        disabled
+                        className="p-2 rounded-sm border border-secondary/10 opacity-30 cursor-not-allowed"
+                      >
+                        <Icon
+                          icon={
+                            direction === "rtl"
+                              ? "heroicons:chevron-right"
+                              : "heroicons:chevron-left"
+                          }
+                          className="w-6 h-6 text-secondary"
+                        />
+                      </button>
+                    )}
+
+                    <div className="flex items-center gap-2">
+                      {Array.from(
+                        { length: pagination.totalPages },
+                        (_, i) => i + 1,
+                      ).map((p) => {
+                        // Simple pagination logic: show all for now, or limit if too many
+                        if (pagination.totalPages > 7) {
+                          // Show first, last, current and neighbors
+                          if (
+                            p === 1 ||
+                            p === pagination.totalPages ||
+                            Math.abs(p - pagination.currentPage) <= 1
+                          ) {
+                            return (
+                              <NavLink
+                                key={p}
+                                to={createPageUrl(p)}
+                                className={({ isActive }) =>
+                                  `w-10 h-10 rounded-sm font-bold transition-all flex items-center justify-center ${
+                                    isActive || (!page && p === 1)
+                                      ? "bg-secondary text-white"
+                                      : "hover:bg-secondary/5 text-secondary"
+                                  }`
+                                }
+                              >
+                                {p}
+                              </NavLink>
+                            );
+                          }
+                          if (p === 2 || p === pagination.totalPages - 1) {
+                            return (
+                              <span key={p} className="text-secondary/30">
+                                ...
+                              </span>
+                            );
+                          }
+                          return null;
+                        }
+
+                        return (
+                          <NavLink
+                            key={p}
+                            to={createPageUrl(p)}
+                            className={({ isActive }) =>
+                              `w-10 h-10 rounded-sm font-bold transition-all flex items-center justify-center ${
+                                isActive || (!page && p === 1)
+                                  ? "bg-secondary text-white"
+                                  : "hover:bg-secondary/5 text-secondary"
+                              }`
+                            }
+                          >
+                            {p}
+                          </NavLink>
+                        );
+                      })}
+                    </div>
+
+                    {pagination.currentPage < pagination.totalPages ? (
+                      <NavLink
+                        to={createPageUrl(pagination.currentPage + 1)}
+                        className="p-2 rounded-sm border border-secondary/10 hover:bg-secondary/5 transition-colors"
+                      >
+                        <Icon
+                          icon={
+                            direction === "rtl"
+                              ? "heroicons:chevron-left"
+                              : "heroicons:chevron-right"
+                          }
+                          className="w-6 h-6 text-secondary"
+                        />
+                      </NavLink>
+                    ) : (
+                      <button
+                        disabled
+                        className="p-2 rounded-sm border border-secondary/10 opacity-30 cursor-not-allowed"
+                      >
+                        <Icon
+                          icon={
+                            direction === "rtl"
+                              ? "heroicons:chevron-left"
+                              : "heroicons:chevron-right"
+                          }
+                          className="w-6 h-6 text-secondary"
+                        />
+                      </button>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <EmptyState />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <JobDetailsDialog
+        job={selectedJob}
+        isOpen={!!selectedJob}
+        onClose={() => setSelectedJob(null)}
+      />
+    </div>
+  );
+}

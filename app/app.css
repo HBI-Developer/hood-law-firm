@@ -1,0 +1,200 @@
+@import "tailwindcss";
+@import "keen-slider/keen-slider.min.css";
+
+@font-face {
+  font-family: "Lora";
+  src: url("/fonts/Lora-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lora";
+  src: url("/fonts/Lora-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sakkal Majalla";
+  src: url("/fonts/sakkal-majalla.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sakkal Majalla";
+  src: url("/fonts/sakkal-majalla-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-primary: #e9dfcf;
+  --color-secondary: #231f20;
+  --color-side-1: #002f87;
+  --color-side-2: #d4af37;
+  --color-side-3: #3b3536;
+
+  --font-primary: "Lora", serif;
+  --font-secondary: "Sakkal Majalla", sans-serif;
+
+  --animate-duration: 300ms;
+  --animate-delay: calc(var(--animate-duration) / 2);
+
+  --animate-fade-in: fade-in var(--animate-duration) ease-out;
+  --animate-fade-out: fade-in var(--animate-duration) reverse ease-out
+    var(--animate-delay);
+  --animate-slide-in-ltr: slide-in-ltr var(--animate-duration) ease-in-out;
+  --animate-slide-in-rtl: slide-in-rtl var(--animate-duration) ease-in-out;
+  --animate-slow-zoom: slow-zoom 20s ease-in-out infinite alternate;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
+  --animate-scroll-line: scroll-line 2s infinite;
+}
+
+:root {
+  font-family: var(--font-secondary);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.text-main-title {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p,
+span,
+li,
+.text-description {
+  font-family: var(--font-secondary);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  filter: grayscale(1) invert(1) contrast(0.9) brightness(0.8);
+  z-index: 1;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-ltr {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-rtl {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-logo {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes slow-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scroll-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.phone-input-container .PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-secondary);
+  color: var(--color-secondary);
+  padding-left: 10px;
+}
+
+.phone-input-container .PhoneInputCountry {
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid rgba(var(--color-secondary), 0.1);
+}
+
+.phone-input-container .PhoneInputCountrySelect {
+  cursor: pointer;
+}
+
+.grecaptcha-badge {
+  z-index: 21 !important;
+}
