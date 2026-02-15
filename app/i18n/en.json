@@ -58,7 +58,9 @@
     },
     "team": {
       "consultants": "Consultants",
-      "admins": "Administrators"
+      "admins": "Administrators",
+      "consultant": "Consultant",
+      "admin": "Administrator"
     },
     "identity": {
       "vision": {
@@ -205,6 +207,9 @@
     "retry_fetch": "Retry",
     "no_data_stats": "No statistics available at the moment.",
     "no_data_services": "No services available at the moment.",
+    "no_data_awards": "No awards or recognitions to display at the moment.",
+    "no_data_testimonials": "No testimonials to display at the moment.",
+    "no_data_team": "No members in this category at the moment.",
     "error_general": {
       "heading": "An unexpected error occurred",
       "describe": "Sorry, something went wrong while processing your request. We apologize for the inconvenience."

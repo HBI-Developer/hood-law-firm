@@ -19,6 +19,12 @@ export const articles = sqliteTable("articles", {
   views: integer("views").default(0),
 });
 
+export const awards = sqliteTable("awards", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  image: text("image").notNull(),
+});
+
 export const legal = sqliteTable("legal", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
@@ -60,6 +66,23 @@ export const services = sqliteTable("services", {
   label: text("label").notNull().unique(),
   overview: text("overview").notNull(),
   slug: text("slug").notNull(),
+  lang: text("lang").notNull().default("en"),
+});
+
+export const team = sqliteTable("team", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  job: integer("job").notNull(),
+  name: text("name").notNull(),
+  image: text("image").notNull(),
+  bio: text("bio").notNull(),
+  lang: text("lang").notNull().default("en"),
+});
+
+export const testimonials = sqliteTable("testimonials", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  position: text("position").notNull(),
+  testimonial: text("testimonial").notNull(),
   lang: text("lang").notNull().default("en"),
 });
 

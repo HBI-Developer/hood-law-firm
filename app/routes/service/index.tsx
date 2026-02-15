@@ -1,30 +1,32 @@
-import { AboutHero, IdentitySection, TeamSection } from "./components";
 import { getFixedT } from "~/i18n/server";
 import { data, type LoaderFunctionArgs } from "react-router";
-import { eq, type InferSelectModel } from "drizzle-orm";
-import { team } from "~/databases/schema";
+import { and, eq, type InferSelectModel } from "drizzle-orm";
+import { services, team } from "~/databases/schema";
 import { db } from "~/databases/config.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const t = await getFixedT(request);
-  const { lang } = params;
+  const { lang, slug } = params;
 
-  let teamCollection: Array<InferSelectModel<typeof team>> = [];
-  let teamError = false;
+  let service: InferSelectModel<typeof services> | undefined;
+  let serviceError = false;
 
   try {
-    teamCollection = await db.query.team.findMany({
-      where: eq(team.lang, lang || "en"),
+    service = await db.query.services.findFirst({
+      where: and(
+        eq(services.slug, slug || ""),
+        eq(services.lang, lang || "en"),
+      ),
     });
   } catch (_) {
-    teamError = true;
+    serviceError = true;
   }
 
   return data({
-    team: teamCollection,
-    teamError,
+    service,
+    serviceError,
     metaTags: {
-      title: t("title", { title: t("link.about") }),
+      title: t("title", { title: service?.label || "service" }),
       description: t("about.description"),
     },
   });
@@ -39,12 +41,6 @@ export function meta({ data }: typeof loader) {
   return [{ title }, { name: "description", content: description }];
 }
 
-export default function About() {
-  return (
-    <>
-      <AboutHero />
-      <TeamSection />
-      <IdentitySection />
-    </>
-  );
+export default function Service() {
+  return <div>Service</div>;
 }

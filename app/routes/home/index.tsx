@@ -9,7 +9,7 @@ import {
 import { data, type LoaderFunctionArgs } from "react-router";
 import { getFixedT } from "~/i18n/server";
 import { eq, type InferSelectModel } from "drizzle-orm";
-import { stats } from "~/databases/schema";
+import { awards, stats, testimonials } from "~/databases/schema";
 import { db } from "~/databases/config.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -17,7 +17,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { lang } = params;
 
   let statistics: Array<InferSelectModel<typeof stats>> = [];
+  let awardsCollection: Array<InferSelectModel<typeof awards>> = [];
+  let testmonialsCollection: Array<InferSelectModel<typeof testimonials>> = [];
   let statsError = false;
+  let awardsError = false;
+  let testimonialsError = false;
 
   try {
     statistics = await db.query.stats.findMany({
@@ -27,9 +31,27 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     statsError = true;
   }
 
+  try {
+    awardsCollection = await db.select().from(awards);
+  } catch (_) {
+    awardsError = true;
+  }
+
+  try {
+    testmonialsCollection = await db.query.testimonials.findMany({
+      where: eq(testimonials.lang, lang || "en"),
+    });
+  } catch (_) {
+    testimonialsError = true;
+  }
+
   return data({
     stats: statistics,
     statsError,
+    awards: awardsCollection,
+    awardsError,
+    testimonials: testmonialsCollection,
+    testimonialsError,
     metaTags: {
       title: t("home"),
       description: t("description"),

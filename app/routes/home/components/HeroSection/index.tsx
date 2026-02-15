@@ -3,10 +3,13 @@ import { useTranslation } from "react-i18next";
 import { Button } from "react-aria-components";
 import { Icon as Iconify } from "@iconify/react";
 import { VideoPlayer } from "..";
+import { useNavigate, useParams } from "react-router";
 
 export default function HeroSection() {
   const { t, i18n } = useTranslation();
   const [isVideoMode, setIsVideoMode] = useState(false);
+  const navigate = useNavigate();
+  const { lang } = useParams();
 
   return (
     <section
@@ -71,7 +74,10 @@ export default function HeroSection() {
                 {t("hero.watch_video")}
               </Button>
 
-              <Button className="px-8 py-4 border border-primary/20 text-primary font-bold rounded-sm hover:bg-primary/10 transition-all cursor-pointer">
+              <Button
+                className="px-8 py-4 border border-primary/20 text-primary font-bold rounded-sm hover:bg-primary/10 transition-all cursor-pointer"
+                onClick={() => navigate(`/${lang}/contact#contact`)}
+              >
                 {t("hero.consult")}
               </Button>
             </div>

@@ -1,8 +1,7 @@
 import { Icon } from "@iconify/react";
-import type { InferSelectModel } from "drizzle-orm";
 import { useTranslation } from "react-i18next";
-import { Link, useFetcher, useLoaderData, useParams } from "react-router";
-import { DataEmptyState, DataErrorState } from "~/components";
+import { useFetcher, useLoaderData, useParams } from "react-router";
+import { DataEmptyState, DataErrorState, NavLink } from "~/components";
 
 export default function ServicesSection() {
   const { t } = useTranslation();
@@ -37,7 +36,7 @@ export default function ServicesSection() {
             {servicesList.map((service: any) => (
               <div
                 key={service.id}
-                className="group min-w-[80%] max-w-[80%] md:min-w-[40%] md:max-w-[40%] lg:min-w-[30%] lg:max-w-[30%] relative bg-white rounded-4xl shadow-xl shadow-stone-200/50 overflow-visible transition-transform duration-500 hover:-translate-y-2 border border-stone-100"
+                className="group min-w-[80%] max-w-[80%] md:min-w-[40%] md:max-w-[40%] lg:min-w-[30%] lg:max-w-[30%] relative bg-white rounded-4xl shadow-xl shadow-stone-200/50 overflow-visible transition-transform duration-500 hover:-translate-y-2 border border-stone-100 flex flex-col"
               >
                 {/* الحاوية العلوية للصورة */}
                 <div className="relative h-64 w-full overflow-hidden rounded-t-4xl">
@@ -58,7 +57,7 @@ export default function ServicesSection() {
                 </div>
 
                 {/* المحتوى السفلي */}
-                <div className="pt-16 pb-10 px-8 text-center">
+                <div className="pt-16 pb-10 px-8 text-center flex-1 flex flex-col">
                   <h3 className="text-2xl font-bold font-primary text-stone-900 mb-4">
                     {service.label}
                   </h3>
@@ -66,16 +65,16 @@ export default function ServicesSection() {
                     {service.overview}
                   </p>
 
-                  <Link
-                    to={`/${lang}/services/${service.slug}`}
-                    className="inline-flex items-center text-blue-700 font-bold hover:text-secondary transition-colors gap-2 group/btn"
+                  <NavLink
+                    to={`/${lang}/service${service.slug}`}
+                    className="inline-flex items-center text-blue-700 font-bold hover:text-secondary transition-colors gap-2 group/btn mt-auto mx-auto"
                   >
                     {t("learn_more")}
                     <Icon
                       icon="solar:arrow-left-linear"
                       className="w-4 h-4 transition-transform group-hover/btn:-translate-x-1 rtl:rotate-0 ltr:rotate-180"
                     />
-                  </Link>
+                  </NavLink>
                 </div>
               </div>
             ))}

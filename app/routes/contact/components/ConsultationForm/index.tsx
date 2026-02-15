@@ -108,7 +108,7 @@ export default function ConsultationForm() {
 
   return (
     <>
-      <section className="py-24 bg-[#FDFDFD]">
+      <section className="py-24 bg-[#FDFDFD]" id="contact">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="bg-white rounded-[3rem] border border-secondary/5 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] p-8 md:p-16">
             <div className="mb-12 text-center">
