@@ -1,4 +1,10 @@
-import { data, useParams, type LoaderFunctionArgs } from "react-router";
+import {
+  data,
+  useParams,
+  type LoaderFunctionArgs,
+  useRouteError,
+  isRouteErrorResponse,
+} from "react-router";
 import { getFixedT, getLang } from "~/i18n/server";
 import { db } from "~/databases/config.server";
 import { articles, blogCategories } from "~/databases/schema";
@@ -21,7 +27,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const selectedCategoryId = category || DEFAULT_BLOG_CATEGORY;
   const currentPage = Math.max(1, Number(page || "1"));
 
-  try {
     const categories = await db.select().from(blogCategories);
 
     const whereClause = and(
@@ -57,20 +62,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         description: t("blog.description"),
       },
     });
-  } catch (error) {
-    console.error("Failed to fetch articles:", error);
-    return data({
-      articles: [],
-      categories: [],
-      totalPages: 0,
-      currentPage: 1,
-      selectedCategoryId: null,
-      metaTags: {
-        title: t("title", { title: t("link.blog") }),
-        description: t("blog.description"),
-      },
-    });
-  }
 };
 
 // @ts-expect-error TypeScript Analyzer is wrong
@@ -206,6 +197,74 @@ export default function Blog() {
             })}
           </div>
         )}
+      </div>
+    </main>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  let errorMessage = t("errors.error_general.describe");
+  let errorTitle = t("errors.error_fetching_data");
+
+  if (isRouteErrorResponse(error)) {
+    errorMessage = error.data || error.statusText;
+    errorTitle = `${error.status} - ${error.statusText}`;
+  } else if (error instanceof Error) {
+    if (process.env.NODE_ENV === "development") {
+      errorMessage = error.message;
+    }
+  }
+
+  // Reload page handler
+  const handleRetry = () => {
+    window.location.reload();
+  };
+
+  return (
+    <main className="bg-gray-50/50 min-h-screen flex items-center justify-center p-6 text-center" dir="rtl">
+      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-10 flex flex-col items-center">
+          <div className="mb-6 inline-flex p-4 rounded-full bg-red-50 text-red-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-12 h-12"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+          </div>
+
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 font-primary">
+            {errorTitle}
+          </h1>
+
+
+          <div className="flex justify-center gap-4 w-full">
+            <NavLink
+              to="/"
+              className="px-6 py-3 rounded-xl border border-gray-200 text-gray-700 font-bold hover:bg-gray-50 transition-colors"
+            >
+              {t("404.back_home") || "Back Home"}
+            </NavLink>
+
+            <button
+              onClick={handleRetry}
+              className="px-8 py-3 rounded-xl bg-side-2 text-secondary font-bold shadow-lg shadow-side-2/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
+            >
+              {t("errors.retry_fetch") || "Retry"}
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   );

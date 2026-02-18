@@ -65,6 +65,11 @@ export const services = sqliteTable("services", {
   icon: text("icon").notNull(),
   label: text("label").notNull().unique(),
   overview: text("overview").notNull(),
+  description: text("description").notNull(),
+  features: text("features").notNull(),
+  process: text("process").notNull(),
+  reasons: text("reasons").notNull(),
+  faq: text("faq").notNull(),
   slug: text("slug").notNull(),
   lang: text("lang").notNull().default("en"),
 });

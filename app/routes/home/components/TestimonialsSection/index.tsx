@@ -83,7 +83,7 @@ export default function TestimonialsSection() {
       mode: "free-snap", // الانتقال الحر مع القفز لأقرب بطاقة
 
       slides: {
-        perView: 1.2, // يظهر أجزاء من الجوانب في الجوال
+        perView: 1.2,
         spacing: 20,
         origin: "center",
       },
@@ -106,7 +106,7 @@ export default function TestimonialsSection() {
         rtl: isRtl,
       });
     }
-  }, [REVIEWS.length, isRtl, instanceRef]);
+  }, []);
 
   return (
     <section className="py-24 bg-secondary relative overflow-hidden">

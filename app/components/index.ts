@@ -8,5 +8,6 @@ export { default as LanguageManager } from "./LanugageManager";
 export { default as ImagesLoadMonitor } from "./ImagesLoadMonitor";
 export { default as LoadingScreen } from "./LoadingScreen";
 export { default as NavLink } from "./NavLink";
+export { default as DisclaimerBanner } from "./DisclaimerBanner";
 export { default as RecaptchaManager } from "./RecaptchaManager";
 export { default as WhatsAppWidget } from "./WhatsAppWidget";

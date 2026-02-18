@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import {
   Footer,
   Header,
+  DisclaimerBanner,
   ImagesLoadMonitor,
   LoadingScreen,
   WhatsAppWidget,
@@ -19,8 +20,10 @@ export default function MainLayout() {
         <Outlet />
       </main>
 
+
       <Footer />
       <WhatsAppWidget />
+      <DisclaimerBanner />
       <LoadingScreen open={loading} />
     </ImagesLoadMonitor>
   );

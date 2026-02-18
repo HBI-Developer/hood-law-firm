@@ -10,6 +10,7 @@ import "react-phone-number-input/style.css";
 import { CHECK_CONTACT_FIELDS_SCHEMA } from "~/constants";
 import { useFetcher } from "react-router";
 import { useEffect, useState } from "react";
+import { useGetUserCountry } from "~/hooks/useGetUserCountry";
 
 type FormData = z.infer<typeof CHECK_CONTACT_FIELDS_SCHEMA>;
 
@@ -106,6 +107,8 @@ export default function ConsultationForm() {
   const normalClass =
     "border-secondary/10 bg-secondary/5 focus:border-side-2 focus:bg-white";
 
+  const defaultCountry = useGetUserCountry(); // Dynamic country detection
+
   return (
     <>
       <section className="py-24 bg-[#FDFDFD]" id="contact">
@@ -189,7 +192,7 @@ export default function ConsultationForm() {
                         {...field}
                         international
                         countryCallingCodeEditable={false}
-                        defaultCountry="QA"
+                        defaultCountry={defaultCountry as any}
                         className={`w-full p-4 rounded-2xl transition-all flex border ${
                           errors.phone ? errorClass : normalClass
                         }`}

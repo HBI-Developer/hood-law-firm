@@ -21,10 +21,10 @@ export default function EmptyState() {
         </svg>
       </div>
       <h3 className="text-2xl font-bold text-secondary mb-2 font-primary">
-        {t("noJobsAvailable") || "لا توجد وظائف متاحة حاليًا"}
+        {t("careers.noJobsAvailable") || "لا توجد وظائف متاحة حاليًا"}
       </h3>
       <p className="text-secondary/60 max-w-md mx-auto font-secondary text-lg">
-        {t("checkBackLater") ||
+        {t("careers.noJobsMessage") ||
           "نأسف، ليس لدينا أي شواغر في الوقت الحالي. يرجى التحقق مرة أخرى لاحقًا أو متابعتنا على وسائل التواصل الاجتماعي لمعرفة الفرص الجديدة."}
       </p>
     </div>

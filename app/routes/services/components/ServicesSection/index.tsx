@@ -66,7 +66,7 @@ export default function ServicesSection() {
                   </p>
 
                   <NavLink
-                    to={`/${lang}/service${service.slug}`}
+                    to={`/${lang}/service/${service.slug}`}
                     className="inline-flex items-center text-blue-700 font-bold hover:text-secondary transition-colors gap-2 group/btn mt-auto mx-auto"
                   >
                     {t("learn_more")}

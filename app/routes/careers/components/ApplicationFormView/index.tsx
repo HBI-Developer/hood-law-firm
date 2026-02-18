@@ -13,6 +13,7 @@ import {
 } from "~/constants";
 import { useFetcher } from "react-router";
 import validateFile from "../../functions/validateFile";
+import { useGetUserCountry } from "~/hooks/useGetUserCountry";
 
 type FormData = z.infer<typeof CHECK_JOB_APPLICATION_SCHEMA>;
 
@@ -27,6 +28,8 @@ export default function ApplicationFormView({
   onClose: () => void;
   t: any;
 }) {
+  const defaultCountry = useGetUserCountry(); // Dynamic country detection
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -228,12 +231,12 @@ export default function ApplicationFormView({
               <Controller
                 name="phone"
                 control={control}
-                render={({ field }) => (
+                  render={({ field }) => (
                   <PhoneInput
                     {...field}
                     international
                     countryCallingCodeEditable={false}
-                    defaultCountry="QA"
+                    defaultCountry={defaultCountry as any}
                     className={`w-full transition-all flex border rounded-sm px-4 py-1.5 [&_input]:outline-none [&_input]:h-full [&_input]:py-2 ${
                       errors.phone ? errorClass : normalClass
                     }`}

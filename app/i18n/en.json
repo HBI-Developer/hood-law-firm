@@ -99,6 +99,25 @@
       }
     }
   },
+  "service": {
+    "breadcrumb_home": "Home",
+    "breadcrumb_services": "Our Services",
+    "overview_title": "Service Overview",
+    "key_features": "Key Features",
+    "our_approach": "Our Approach",
+    "why_choose_us": "Why Choose Us",
+    "faq_title": "Frequently Asked Questions",
+    "cta": {
+      "title": "Need Legal Assistance?",
+      "description": "Our specialized legal team is ready to help you achieve your legal goals. Book your free consultation today and get a comprehensive analysis of your case.",
+      "button": "Book Your Consultation"
+    },
+    "related_services": "Related Services",
+    "not_found": {
+      "title": "Service Not Found",
+      "description": "Sorry, the service you are looking for is not available."
+    }
+  },
   "contact": {
     "description": "Explore our comprehensive legal services, from litigation and arbitration to corporate consulting and intellectual property. Years of expertise in protecting clients' interests and crafting innovative legal strategies to secure your rights.",
     "map": {
@@ -151,6 +170,8 @@
     "refresh": "Refresh",
     "refreshing": "Refreshing...",
     "loading": "Loading...",
+    "noJobsAvailable": "No Jobs Available",
+    "noJobsMessage": "We are sorry, we do not have any vacancies at the moment. Please check back later or follow us on social media for new opportunities.",
     "jobType": "Job Type",
     "experience": "Experience",
     "deadline": "Deadline",
@@ -221,5 +242,9 @@
       "send": "Start Chat",
       "phone": "+974 3022 8438"
     }
+  },
+  "disclaimer": {
+    "title": "Important Disclaimer",
+    "message": "This website is for demonstration purposes only and does not represent a real law firm. All content and data herein are for display and testing purposes."
   }
 }
