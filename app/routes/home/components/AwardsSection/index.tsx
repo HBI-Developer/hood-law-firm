@@ -8,39 +8,34 @@ import useImagesTracker from "~/hooks/useImagesTracker";
 import { DataEmptyState, DataErrorState } from "~/components";
 
 export default function AwardsSection() {
-  const { t, i18n } = useTranslation();
-  const { tracker, isLoaded } = useImagesTracker();
-  const animationConfig = { duration: 30000, easing: (t: number) => t };
-  const loaderData = useLoaderData();
-  const fetcher = useFetcher();
-
-  const AWARDS = fetcher.data?.awards ?? loaderData.awards;
-  const awardsError = fetcher.data?.awardsError ?? loaderData.awardsError;
-  const isLoading = fetcher.state !== "idle";
-
-  const handleRetry = () => {
-    fetcher.load(window.location.pathname);
-  };
-
-  const options: KeenSliderOptions = {
-    loop: true,
-    renderMode: "performance",
-    drag: false,
-    rtl: i18n.language === "ar", // دعم اتجاه اللغة برمجياً
-    slides: {
-      perView: "auto",
-      spacing: 40, // مسافة أقل قليلاً للجوال لتناسب الحجم الأكبر
+  const { t, i18n } = useTranslation(),
+    { tracker, isLoaded } = useImagesTracker(),
+    animationConfig = { duration: 30000, easing: (t: number) => t },
+    loaderData = useLoaderData(),
+    fetcher = useFetcher(),
+    AWARDS = fetcher.data?.awards ?? loaderData.awards,
+    awardsError = fetcher.data?.awardsError ?? loaderData.awardsError,
+    isLoading = fetcher.state !== "idle",
+    handleRetry = () => {
+      fetcher.load(window.location.pathname);
     },
-  };
+    options: KeenSliderOptions = {
+      loop: true,
+      renderMode: "performance",
+      drag: false,
+      rtl: i18n.language === "ar",
+      slides: {
+        perView: "auto",
+        spacing: 40,
+      },
+    };
 
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(options);
 
-  // إعادة تشغيل السلايدر عند اكتمال الصور أو تغير اللغة
   useEffect(() => {
     if (isLoaded && instanceRef.current) {
       const slider = instanceRef.current;
 
-      // إجبار السلايدر على إعادة الحساب بالخيارات الجديدة (بما فيها الـ RTL)
       setTimeout(() => {
         slider.update({
           ...options,
@@ -61,7 +56,7 @@ export default function AwardsSection() {
         slider.on("updated", () => {});
       };
     }
-  }, [isLoaded, i18n.language]); // مصفوفة التبعيات تضمن التحديث عند تغير اللغة
+  }, [isLoaded, i18n.language]);
 
   return (
     <section className="py-16 md:py-24 bg-white overflow-hidden select-none">
@@ -86,7 +81,6 @@ export default function AwardsSection() {
           />
         ) : (
           <div className="relative group" ref={tracker}>
-            {/* Gradients */}
             <div className="absolute inset-y-0 left-0 w-20 md:w-40 bg-linear-to-r from-white to-transparent z-10 pointer-events-none" />
             <div className="absolute inset-y-0 right-0 w-20 md:w-40 bg-linear-to-l from-white to-transparent z-10 pointer-events-none" />
 

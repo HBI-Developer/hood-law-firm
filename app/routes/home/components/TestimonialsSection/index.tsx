@@ -7,97 +7,89 @@ import type { InferSelectModel } from "drizzle-orm";
 import type { testimonials } from "~/databases/schema";
 import { useEffect } from "react";
 
-// --- Plugins المخصصة بناءً على مرجع المكتبة الأحدث ---
-
-// 1. التحكم بعجلة الماوس (Wheel Controls)
 const WheelControls: KeenSliderPlugin = (slider) => {
-  const handleWheel = (e: WheelEvent) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      e.preventDefault();
-      e.deltaX > 0 ? slider.next() : slider.prev();
-    }
-  };
-  slider.on("created", () => {
-    slider.container.addEventListener("wheel", handleWheel, { passive: false });
-  });
-};
-
-// 2. التبديل التلقائي (Autoplay) مع مراعاة التفاعل
-const Autoplay: KeenSliderPlugin = (slider) => {
-  let timeout: ReturnType<typeof setTimeout>;
-  let mouseOver = false;
-
-  function clear() {
-    clearTimeout(timeout);
-  }
-
-  function next() {
-    clear();
-    if (mouseOver) return;
-    timeout = setTimeout(() => {
-      slider.next();
-    }, 4000);
-  }
-
-  slider.on("created", () => {
-    slider.container.addEventListener("mouseover", () => {
-      mouseOver = true;
-      clear();
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        e.deltaX > 0 ? slider.next() : slider.prev();
+      }
+    };
+    slider.on("created", () => {
+      slider.container.addEventListener("wheel", handleWheel, {
+        passive: false,
+      });
     });
-    slider.container.addEventListener("mouseout", () => {
+  },
+  Autoplay: KeenSliderPlugin = (slider) => {
+    let timeout: ReturnType<typeof setTimeout>,
       mouseOver = false;
+
+    function clear() {
+      clearTimeout(timeout);
+    }
+
+    function next() {
+      clear();
+      if (mouseOver) return;
+      timeout = setTimeout(() => {
+        slider.next();
+      }, 4000);
+    }
+
+    slider.on("created", () => {
+      slider.container.addEventListener("mouseover", () => {
+        mouseOver = true;
+        clear();
+      });
+      slider.container.addEventListener("mouseout", () => {
+        mouseOver = false;
+        next();
+      });
       next();
     });
-    next();
-  });
-  slider.on("animationEnded", next);
-  slider.on("updated", next);
-  slider.on("destroyed", clear);
-};
-
-export default function TestimonialsSection() {
-  const { t, i18n } = useTranslation();
-  const isRtl = i18n.language === "ar";
-  const loaderData = useLoaderData();
-  const fetcher = useFetcher();
-
-  const REVIEWS = fetcher.data?.testimonials ?? loaderData.testimonials ?? [];
-  const testimonialsError =
-    fetcher.data?.testimonialsError ?? loaderData.testimonialsError;
-  const isLoading = fetcher.state !== "idle";
-
-  const handleRetry = () => {
-    fetcher.load(window.location.pathname);
+    slider.on("animationEnded", next);
+    slider.on("updated", next);
+    slider.on("destroyed", clear);
   };
 
-  // مضاعفة المصفوفة لضمان عمل Loop بسلاسة عند استخدام Centered Slides
-  const DOUBLED_REVIEWS =
-    REVIEWS.length > 0 && REVIEWS.length < 10
-      ? [...REVIEWS, ...REVIEWS]
-      : REVIEWS;
-
-  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
-    {
-      loop: REVIEWS.length > 1,
-      rtl: isRtl,
-      mode: "free-snap", // الانتقال الحر مع القفز لأقرب بطاقة
-
-      slides: {
-        perView: 1.2,
-        spacing: 20,
-        origin: "center",
-      },
-      breakpoints: {
-        "(min-width: 768px)": {
-          slides: { perView: 2, spacing: 30, origin: "center" },
-        },
-        "(min-width: 1200px)": {
-          slides: { perView: 3, spacing: 40, origin: "center" },
-        },
-      },
+export default function TestimonialsSection() {
+  const { t, i18n } = useTranslation(),
+    isRtl = i18n.language === "ar",
+    loaderData = useLoaderData(),
+    fetcher = useFetcher(),
+    REVIEWS = fetcher.data?.testimonials ?? loaderData.testimonials ?? [],
+    testimonialsError =
+      fetcher.data?.testimonialsError ?? loaderData.testimonialsError,
+    isLoading = fetcher.state !== "idle",
+    handleRetry = () => {
+      fetcher.load(window.location.pathname);
     },
-    [WheelControls, Autoplay], // إضافة الـ Plugins هنا
-  );
+    DOUBLED_REVIEWS =
+      REVIEWS.length > 0 && REVIEWS.length < 10
+        ? [...REVIEWS, ...REVIEWS]
+        : REVIEWS,
+    [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
+      {
+        loop: REVIEWS.length > 1,
+        rtl: isRtl,
+        mode: "free-snap",
+
+        slides: {
+          perView: 1.2,
+          spacing: 20,
+          origin: "center",
+        },
+        breakpoints: {
+          "(min-width: 768px)": {
+            slides: { perView: 2, spacing: 30, origin: "center" },
+          },
+          "(min-width: 1200px)": {
+            slides: { perView: 3, spacing: 40, origin: "center" },
+          },
+        },
+      },
+      [WheelControls, Autoplay],
+    );
 
   useEffect(() => {
     if (instanceRef.current) {
@@ -110,7 +102,6 @@ export default function TestimonialsSection() {
 
   return (
     <section className="py-24 bg-secondary relative overflow-hidden">
-      {/* الخلفية الزخرفية */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-side-2/5 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -191,9 +182,7 @@ export default function TestimonialsSection() {
                     key={`${review.id}-${idx}`}
                     className="keen-slider__slide py-8"
                   >
-                    {/* بطاقة Glassmorphism مطورة */}
                     <div className="h-full bg-white/3 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl flex flex-col justify-between hover:bg-white/6 hover:border-side-2/30 transition-all duration-500 shadow-2xl relative overflow-hidden group">
-                      {/* انعكاس ضوئي علوي للبطاقة */}
                       <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                       <Iconify

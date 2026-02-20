@@ -4,14 +4,10 @@ import { EMBED_MAP_LINK } from "~/constants";
 export default function MapSection() {
   const { t, i18n } = useTranslation();
 
-  // رابط الخريطة (يمكنك استبداله برابط موقع المكتب الفعلي من Google Maps)
-  // استخدمت هنا إحداثيات عامة لمركز مالي، قم بتغيير 'q' إلى عنوان مكتبكم
-
   return (
     <section className="py-24 bg-secondary">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row gap-12 items-stretch">
-          {/* الجانب النصي: معلومات العنوان */}
           <div
             className={`lg:w-1/3 flex flex-col justify-center ${i18n.language === "ar" ? "text-right" : "text-left"}`}
           >
@@ -49,9 +45,7 @@ export default function MapSection() {
             </div>
           </div>
 
-          {/* الخريطة: Google Maps Iframe */}
           <div className="lg:w-2/3 relative h-112.5 md:h-auto min-h-100 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-            {/* Overlay خفيف لجعل الخريطة تندمج مع ألوان الموقع حتى يمرر المستخدم الفأرة فوقها */}
             <div className="absolute inset-0 bg-secondary/10 pointer-events-none group-hover:bg-transparent transition-all duration-500 z-10" />
 
             <iframe

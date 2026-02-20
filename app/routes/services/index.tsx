@@ -1,24 +1,12 @@
 import { getFixedT } from "~/i18n/server";
 import { data, type LoaderFunctionArgs } from "react-router";
 import { ServicesHero, ServicesSection } from "./components";
-import { services } from "~/databases/schema";
-import { db } from "~/databases/config.server";
-import { eq, type InferSelectModel } from "drizzle-orm";
+import { hooddb } from "~/constants.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const { lang } = params;
-
-  let servicesCollection: Array<InferSelectModel<typeof services>> = [];
-  let servicesError = false;
-
-  try {
-    servicesCollection = await db.query.services.findMany({
-      where: eq(services.lang, lang || "en"),
-    });
-  } catch (_) {
-    servicesError = true;
-  }
+  const t = await getFixedT(request),
+    { lang } = params as { lang: Locale },
+    [servicesCollection, servicesError] = await hooddb.getServices(lang);
 
   return data({
     services: servicesCollection,

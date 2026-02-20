@@ -4,12 +4,11 @@ import { Icon } from "@iconify/react";
 import { EMBED_MAP_LINK } from "~/constants";
 
 export default function ContactHero() {
-  const { t } = useTranslation();
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const { t } = useTranslation(),
+    [isUnlocked, setIsUnlocked] = useState(false);
 
   return (
     <section className="relative h-[65vh] min-h-125 w-full bg-secondary overflow-hidden flex items-center justify-center">
-      {/* 1. طبقة الخريطة (Iframe) */}
       <div
         className={`absolute inset-0 z-0 transition-all duration-1000 ${
           isUnlocked
@@ -27,18 +26,15 @@ export default function ContactHero() {
         />
       </div>
 
-      {/* 2. الطبقة التفاعلية (تختفي تماماً عند النقر) */}
       {!isUnlocked && (
         <div
           onClick={() => setIsUnlocked(true)}
           className="absolute inset-0 z-20 cursor-pointer flex items-center justify-center bg-secondary/20 hover:bg-transparent transition-colors duration-500"
         >
-          {/* كرت التنبيه الزجاجي */}
           <div className="relative z-30 flex flex-col items-center gap-6 p-10 rounded-[2.5rem] border border-white/10 bg-secondary/60 backdrop-blur-xl shadow-2xl animate-fade-in-up">
             <div className="relative">
               <div className="absolute inset-0 bg-side-2/20 blur-2xl rounded-full animate-pulse" />
               <div className="relative w-20 h-20 bg-side-2 rounded-2xl flex items-center justify-center text-secondary shadow-lg">
-                {/* أيقونات Iconify الذكية */}
                 <Icon
                   icon="solar:map-point-wave-bold-duotone"
                   className="hidden md:block w-10 h-10 animate-bounce"
@@ -67,7 +63,6 @@ export default function ContactHero() {
         </div>
       )}
 
-      {/* 3. تدرج سفلي سينمائي يختفي عند التفعيل لربط الأقسام */}
       <div
         className={`absolute bottom-0 left-0 w-full h-40 bg-linear-to-t from-[#FDFDFD] via-[#FDFDFD]/40 to-transparent z-10 pointer-events-none transition-opacity duration-1000 ${isUnlocked ? "opacity-0" : "opacity-100"}`}
       />

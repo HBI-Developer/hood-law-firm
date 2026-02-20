@@ -103,16 +103,16 @@ export default function ArticleContent({
           );
 
         case "heading":
-          const level = node.attrs?.level || 1;
-          const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
-          const headingClasses = {
-            h1: "text-3xl font-bold mb-6 mt-8 text-secondary",
-            h2: "text-2xl font-bold mb-5 mt-6 text-secondary",
-            h3: "text-xl font-bold mb-4 mt-5 text-secondary",
-            h4: "text-base font-bold mb-3 mt-4 text-gray-800",
-            h5: "text-sm font-bold mb-3 mt-3 text-gray-800",
-            h6: "text-xs font-bold mb-2 mt-2 text-gray-800",
-          };
+          const level = node.attrs?.level || 1,
+            Tag = `h${level}` as keyof React.JSX.IntrinsicElements,
+            headingClasses = {
+              h1: "text-3xl font-bold mb-6 mt-8 text-secondary",
+              h2: "text-2xl font-bold mb-5 mt-6 text-secondary",
+              h3: "text-xl font-bold mb-4 mt-5 text-secondary",
+              h4: "text-base font-bold mb-3 mt-4 text-gray-800",
+              h5: "text-sm font-bold mb-3 mt-3 text-gray-800",
+              h6: "text-xs font-bold mb-2 mt-2 text-gray-800",
+            };
           return (
             <Tag
               key={key}

@@ -18,33 +18,30 @@ export default function NavLink({
   end,
   onClick,
 }: Props) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const navigate = useNavigate(),
+    location = useLocation(),
+    dispatch = useDispatch(),
+    isActive = end
+      ? location.pathname === to
+      : location.pathname.startsWith(to),
+    computedClassName =
+      typeof className === "function" ? className({ isActive }) : className,
+    handleNavigation = (e: React.MouseEvent) => {
+      if (isActive) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
 
-  const isActive = end
-    ? location.pathname === to
-    : location.pathname.startsWith(to);
-
-  const computedClassName =
-    typeof className === "function" ? className({ isActive }) : className;
-
-  const handleNavigation = (e: React.MouseEvent) => {
-    if (isActive) {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
+      dispatch(isLoading());
+      dispatch(isHiddenOverflow());
 
-    e.preventDefault();
-    dispatch(isLoading());
-    dispatch(isHiddenOverflow());
-
-    setTimeout(() => {
-      onClick?.(e);
-      navigate(to);
-    }, ANIMATION_DURATION());
-  };
+      setTimeout(() => {
+        onClick?.(e);
+        navigate(to);
+      }, ANIMATION_DURATION());
+    };
 
   return (
     <a href={to} onClick={handleNavigation} className={computedClassName}>

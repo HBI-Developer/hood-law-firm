@@ -6,9 +6,6 @@ import {
   isRouteErrorResponse,
 } from "react-router";
 import { getFixedT, getLang } from "~/i18n/server";
-import { db } from "~/databases/config.server";
-import { articles, blogCategories } from "~/databases/schema";
-import { eq, desc, and, count } from "drizzle-orm";
 import { useLoaderData, useNavigation } from "react-router";
 import { NavLink } from "~/components";
 import { ARTICLES_IN_PAGE, DEFAULT_BLOG_CATEGORY } from "~/constants";
@@ -19,49 +16,38 @@ import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { Button } from "react-aria-components";
 import { useRef } from "react";
+import { hooddb } from "~/constants.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const locale = (await getLang(request)) || "ar";
-  const { category, page } = params;
-  const selectedCategoryId = category || DEFAULT_BLOG_CATEGORY;
-  const currentPage = Math.max(1, Number(page || "1"));
-
-    const categories = await db.select().from(blogCategories);
-
-    const whereClause = and(
-      eq(articles.lang, locale),
-      eq(articles.category, Number(selectedCategoryId)),
+  const t = await getFixedT(request),
+    locale = (await getLang(request)) || "ar",
+    { category, page } = params,
+    selectedCategoryId = category || DEFAULT_BLOG_CATEGORY,
+    currentPage = Math.max(1, Number(page || "1")),
+    categories = await hooddb.getArticleCategories(locale),
+    totalCount = await hooddb.getArticleCount(
+      locale,
+      Number(selectedCategoryId),
+    ),
+    totalPages = Math.ceil(totalCount / ARTICLES_IN_PAGE),
+    paginatedArticles = await hooddb.getArticles(
+      locale,
+      Number(selectedCategoryId),
+      ARTICLES_IN_PAGE,
+      (currentPage - 1) * ARTICLES_IN_PAGE,
     );
 
-    const [{ value: totalCount }] = await db
-      .select({ value: count() })
-      .from(articles)
-      .where(whereClause);
-
-    const totalPages = Math.ceil(totalCount / ARTICLES_IN_PAGE);
-
-    const paginatedArticles = await db.query.articles.findMany({
-      where: whereClause,
-      with: {
-        categoryDetails: true,
-      },
-      orderBy: [desc(articles.createdAt)],
-      limit: ARTICLES_IN_PAGE,
-      offset: (currentPage - 1) * ARTICLES_IN_PAGE,
-    });
-
-    return data({
-      articles: paginatedArticles,
-      categories,
-      totalPages,
-      currentPage,
-      selectedCategoryId: Number(selectedCategoryId),
-      metaTags: {
-        title: t("title", { title: t("link.blog") }),
-        description: t("blog.description"),
-      },
-    });
+  return data({
+    articles: paginatedArticles,
+    categories,
+    totalPages,
+    currentPage,
+    selectedCategoryId: Number(selectedCategoryId),
+    metaTags: {
+      title: t("title", { title: t("link.blog") }),
+      description: t("blog.description"),
+    },
+  });
 };
 
 // @ts-expect-error TypeScript Analyzer is wrong
@@ -75,13 +61,13 @@ export function meta({ data }: typeof loader) {
 
 export default function Blog() {
   const { articles, categories, totalPages, currentPage, selectedCategoryId } =
-    useLoaderData<typeof loader>();
-  const { t } = useTranslation();
-  const navigation = useNavigation();
-  const isLoading = navigation.state === "loading";
-  const locale = useSelector((state: RootState) => state.language.locale);
-  const params = useParams();
-  const categoryIsAdded = useRef(false);
+      useLoaderData<typeof loader>(),
+    { t } = useTranslation(),
+    navigation = useNavigation(),
+    isLoading = navigation.state === "loading",
+    locale = useSelector((state: RootState) => state.language.locale),
+    params = useParams(),
+    categoryIsAdded = useRef(false);
 
   return (
     <main className="bg-gray-50/50 min-h-screen">
@@ -203,28 +189,23 @@ export default function Blog() {
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
-  const { t } = useTranslation();
+  const error = useRouteError(),
+    { t } = useTranslation(),
+    handleRetry = () => {
+      window.location.reload();
+    };
 
-  let errorMessage = t("errors.error_general.describe");
   let errorTitle = t("errors.error_fetching_data");
 
   if (isRouteErrorResponse(error)) {
-    errorMessage = error.data || error.statusText;
     errorTitle = `${error.status} - ${error.statusText}`;
-  } else if (error instanceof Error) {
-    if (process.env.NODE_ENV === "development") {
-      errorMessage = error.message;
-    }
   }
 
-  // Reload page handler
-  const handleRetry = () => {
-    window.location.reload();
-  };
-
   return (
-    <main className="bg-gray-50/50 min-h-screen flex items-center justify-center p-6 text-center" dir="rtl">
+    <main
+      className="bg-gray-50/50 min-h-screen flex items-center justify-center p-6 text-center"
+      dir="rtl"
+    >
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-10 flex flex-col items-center">
           <div className="mb-6 inline-flex p-4 rounded-full bg-red-50 text-red-500">
@@ -247,7 +228,6 @@ export function ErrorBoundary() {
           <h1 className="text-3xl font-bold text-gray-900 mb-4 font-primary">
             {errorTitle}
           </h1>
-
 
           <div className="flex justify-center gap-4 w-full">
             <NavLink

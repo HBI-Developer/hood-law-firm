@@ -12,53 +12,40 @@ import {
   useRevalidator,
 } from "react-router";
 import { useTranslation } from "react-i18next";
-import { db } from "~/databases/config.server";
-import { careers as careersTable } from "~/databases/schema";
-import { count, eq, desc } from "drizzle-orm";
 import { EmptyState, JobDetailsDialog, JobPanel } from "./components";
 import { Icon } from "@iconify/react";
-import type { Job } from "~/data/jobs";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { NavLink } from "~/components";
 import { CAREERS_IN_PAGE } from "~/constants";
 import { isHiddenOverflow, isVisibleOverflow } from "~/store/slices/loading";
+import { hooddb } from "~/constants.server";
 export { action } from "./actions/sendApplication";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const locale = params.lang || "en";
-  const url = new URL(request.url);
+  const t = await getFixedT(request),
+    locale = (params.lang || "en") as Locale,
+    url = new URL(request.url);
 
-  // Validate page parameter
   let page = parseInt(params.page || "1");
   if (isNaN(page) || page < 1) {
     return redirect(`${url.origin}/${locale}/careers`);
   }
 
-  // Fetch total count for pagination
-  const [totalCountResult] = await db
-    .select({ value: count() })
-    .from(careersTable)
-    .where(eq(careersTable.lang, locale));
+  const totalCountResult = await hooddb.getCareersCount(locale),
+    totalCount = totalCountResult || 0,
+    totalPages = Math.ceil(totalCount / CAREERS_IN_PAGE);
 
-  const totalCount = totalCountResult?.value || 0;
-  const totalPages = Math.ceil(totalCount / CAREERS_IN_PAGE);
-
-  // If page is out of bounds, redirect to last page or 1
   if (totalPages > 0 && page > totalPages) {
     url.searchParams.set("page", totalPages.toString());
     return redirect(url.toString());
   }
 
-  // Fetch paginated jobs
-  const jobs = await db.query.careers.findMany({
-    where: eq(careersTable.lang, locale),
-    limit: CAREERS_IN_PAGE,
-    offset: (page - 1) * CAREERS_IN_PAGE,
-    orderBy: [desc(careersTable.id)],
-  });
-
+  const jobs = await hooddb.getCareers(
+    locale,
+    CAREERS_IN_PAGE,
+    (page - 1) * CAREERS_IN_PAGE,
+  );
 
   return data({
     jobs: jobs as Job[],
@@ -84,16 +71,15 @@ export function meta({ data }: typeof loader) {
 }
 
 export default function Careers() {
-  const { t } = useTranslation();
-  const { jobs, pagination } = useLoaderData<typeof loader>();
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const fetcher = useFetcher();
-  const direction = useSelector((state: RootState) => state.language.direction);
-  const dispatch = useDispatch();
-  const { page } = useParams();
+  const { t } = useTranslation(),
+    { jobs, pagination } = useLoaderData<typeof loader>(),
+    [selectedJob, setSelectedJob] = useState<Job | null>(null),
+    [isLoading, setIsLoading] = useState(false),
+    fetcher = useFetcher(),
+    direction = useSelector((state: RootState) => state.language.direction),
+    dispatch = useDispatch(),
+    { page } = useParams();
 
-  // Handle loading state on navigation
   useEffect(() => {
     setIsLoading(false);
   }, [jobs]);
@@ -110,7 +96,6 @@ export default function Careers() {
     };
   }, [selectedJob]);
 
-  // Update jobs when fetcher completes
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
       setIsLoading(false);
@@ -118,15 +103,14 @@ export default function Careers() {
   }, [fetcher.data, fetcher.state]);
 
   const handleRefresh = () => {
-    setIsLoading(true);
-    const url = new URL(window.location.href);
-    fetcher.load(url.pathname + url.search);
-  };
-
-  const createPageUrl = (pageNumber: number) => {
-    const params = useParams();
-    return `/${params.lang}/careers/${pageNumber}`;
-  };
+      setIsLoading(true);
+      const url = new URL(window.location.href);
+      fetcher.load(url.pathname + url.search);
+    },
+    createPageUrl = (pageNumber: number) => {
+      const params = useParams();
+      return `/${params.lang}/careers/${pageNumber}`;
+    };
 
   return (
     <div className="w-full relative min-h-[60vh]">
@@ -190,7 +174,6 @@ export default function Careers() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {pagination.totalPages > 1 && (
                   <div className="flex justify-center items-center gap-2 mt-12 pb-8">
                     {pagination.currentPage > 1 ? (
@@ -228,9 +211,7 @@ export default function Careers() {
                         { length: pagination.totalPages },
                         (_, i) => i + 1,
                       ).map((p) => {
-                        // Simple pagination logic: show all for now, or limit if too many
                         if (pagination.totalPages > 7) {
-                          // Show first, last, current and neighbors
                           if (
                             p === 1 ||
                             p === pagination.totalPages ||
@@ -329,20 +310,14 @@ export default function Careers() {
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
-  const { t } = useTranslation();
-  const revalidator = useRevalidator();
+  const error = useRouteError(),
+    { t } = useTranslation(),
+    revalidator = useRevalidator();
 
-  let errorMessage = t("errors.error_general.describe");
   let errorTitle = t("errors.error_fetching_data");
 
   if (isRouteErrorResponse(error)) {
-    errorMessage = error.data || error.statusText;
     errorTitle = `${error.status} - ${error.statusText}`;
-  } else if (error instanceof Error) {
-    if (process.env.NODE_ENV === "development") {
-      errorMessage = error.message;
-    }
   }
 
   return (

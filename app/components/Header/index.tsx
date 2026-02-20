@@ -14,11 +14,9 @@ import type { RootState } from "~/store";
 import { LOGO_BY_LANGUAGE, NAV_LINKS } from "~/constants";
 
 export default function Header() {
-  const { t } = useTranslation();
-  const { locale, direction } = useSelector(
-    (state: RootState) => state.language,
-  );
-  const isRTL = locale === "ar";
+  const { t } = useTranslation(),
+    { locale, direction } = useSelector((state: RootState) => state.language),
+    isRTL = locale === "ar";
 
   return (
     <header

@@ -4,24 +4,21 @@ import * as Brevo from "@getbrevo/brevo";
 import { direction } from "direction";
 import { CHECK_CONTACT_FIELDS_SCHEMA } from "~/constants";
 import z from "zod";
+import { hooddb } from "~/constants.server";
 
-const SERVICES_TYPES = {
-  general: { rtl: "قانون الخدمات العامة", ltr: "General Legal Services" },
-  corporate: { rtl: "قانون الشركات", ltr: "Corporate Law" },
-  ip: { rtl: "قانون الملكية الفكرية", ltr: "Intellectual Property" },
+const DEFAULT_SERVICE = {
+  rtl: "قانون الخدمات العامة",
+  ltr: "General Legal Services",
 };
 
-type ServicesTypes = keyof typeof SERVICES_TYPES;
-
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const payload = Object.fromEntries(formData);
+  const formData = await request.formData(),
+    payload = Object.fromEntries(formData),
+    schema = CHECK_CONTACT_FIELDS_SCHEMA.extend({
+      recaptchaToken: z.string().min(1, { message: "recaptcha_required" }),
+    }),
+    result = schema.safeParse(payload);
 
-  const schema = CHECK_CONTACT_FIELDS_SCHEMA.extend({
-    recaptchaToken: z.string().min(1, { message: "recaptcha_required" }),
-  });
-
-  const result = schema.safeParse(payload);
   if (!result.success) {
     return data(
       {
@@ -68,18 +65,21 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  const msgDir = direction(message) !== "neutral" ? direction(message) : "ltr";
-  const isRTL = msgDir === "rtl";
-  const textAlign = isRTL ? "right" : "left";
+  const msgDir = direction(message) !== "neutral" ? direction(message) : "ltr",
+    isRTL = msgDir === "rtl",
+    textAlign = isRTL ? "right" : "left",
+    BREVO_KEY = process.env.BREVO_API_KEY,
+    [service, serviceError] = await hooddb.getService(isRTL ? "ar" : "en", s),
+    subject = !serviceError
+      ? service?.label
+      : DEFAULT_SERVICE[msgDir as keyof typeof DEFAULT_SERVICE];
 
-  const subject = SERVICES_TYPES[s as ServicesTypes][msgDir as "ltr" | "rtl"];
-
-  const BREVO_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_KEY) {
     return data({ status: "server_error" }, { status: 500 });
   }
 
   const apiInstance = new Brevo.TransactionalEmailsApi();
+
   apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, BREVO_KEY);
 
   const sendSmtpEmail = new Brevo.SendSmtpEmail();

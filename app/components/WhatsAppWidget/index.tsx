@@ -13,9 +13,9 @@ import {
 import { PHONE_NUMBER } from "~/constants";
 
 export default function WhatsAppWidget() {
-  const { t, i18n } = useTranslation();
-  const [message, setMessage] = useState("");
-  const waLink = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+  const { t, i18n } = useTranslation(),
+    [message, setMessage] = useState(""),
+    waLink = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex flex-col items-end gap-4 pointer-events-none">
@@ -32,7 +32,6 @@ export default function WhatsAppWidget() {
             <Dialog className="outline-none">
               {({ close }) => (
                 <div className="flex flex-col h-full max-h-[90vh]">
-                  {/* Header */}
                   <div className="bg-green-600 p-6 text-white flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-white/20 rounded-full">
@@ -62,7 +61,6 @@ export default function WhatsAppWidget() {
                   </div>
 
                   <div className="p-6 space-y-6 overflow-y-auto">
-                    {/* QR Code Section */}
                     <div className="flex flex-col items-center gap-4 bg-stone-50 p-6 rounded-2xl border border-stone-100">
                       <div className="bg-white p-3 rounded-xl shadow-inner border border-stone-100">
                         <img
@@ -84,7 +82,6 @@ export default function WhatsAppWidget() {
                       </div>
                     </div>
 
-                    {/* Chat Area */}
                     <div className="space-y-3">
                       <TextArea
                         value={message}

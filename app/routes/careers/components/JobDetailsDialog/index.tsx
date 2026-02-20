@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import type { Job } from "~/data/jobs";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
 import JobDetailsView from "../JobDetailsView";
@@ -19,16 +18,16 @@ export default function JobDetailsDialog({
   onClose,
 }: JobDetailsDialogProps) {
   if (!job) return null;
-  const { t, i18n } = useTranslation();
-  const [view, setView] = useState<"details" | "form">("details");
-  const [isVisible, setIsVisible] = useState(false);
+  const { t, i18n } = useTranslation(),
+    [view, setView] = useState<"details" | "form">("details"),
+    [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       setView("details");
     } else {
-      const timer = setTimeout(() => setIsVisible(false), 300); // Wait for animation
+      const timer = setTimeout(() => setIsVisible(false), 300);
 
       return () => clearTimeout(timer);
     }
@@ -52,7 +51,6 @@ export default function JobDetailsDialog({
           ${isOpen ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-4"}
         `}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-secondary/10 bg-white sticky top-0 z-10 shrink-0">
           <div>
             <h2 className="text-2xl font-bold text-secondary font-primary">
@@ -75,7 +73,6 @@ export default function JobDetailsDialog({
           </button>
         </div>
 
-        {/* Content Area - Scrollable */}
         <div className="grow overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-thin scrollbar-thumb-side-2 scrollbar-track-transparent hover:scrollbar-thumb-secondary/50 transition-colors">
           {view === "details" ? (
             <JobDetailsView job={job} t={t} i18n={i18n} />
@@ -91,7 +88,6 @@ export default function JobDetailsDialog({
           )}
         </div>
 
-        {/* Footer - Fixed for detail view */}
         {view === "details" && (
           <div className="shrink-0 p-4 border-t border-secondary/10 bg-white flex justify-end">
             <button

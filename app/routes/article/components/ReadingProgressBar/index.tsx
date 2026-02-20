@@ -18,13 +18,12 @@ export default function ReadingProgressBar({
             return;
           }
 
-          const articleTop = articleRef.current.offsetTop;
-          const articleHeight = articleRef.current.offsetHeight;
-          const windowHeight = window.innerHeight;
-          const scrollY = window.scrollY;
-
-          const articleStart = articleTop;
-          const articleEnd = articleTop + articleHeight - windowHeight;
+          const articleTop = articleRef.current.offsetTop,
+            articleHeight = articleRef.current.offsetHeight,
+            windowHeight = window.innerHeight,
+            scrollY = window.scrollY,
+            articleStart = articleTop,
+            articleEnd = articleTop + articleHeight - windowHeight;
 
           if (scrollY < articleStart) {
             setScroll(0);

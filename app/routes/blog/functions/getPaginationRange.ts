@@ -1,7 +1,7 @@
 export default function getPaginationRange(current: number, total: number) {
-  const delta = 1;
-  const range = [];
-  const rangeWithDots = [];
+  const delta = 1,
+    range = [],
+    rangeWithDots = [];
   let l;
 
   for (let i = 1; i <= total; i++) {

@@ -19,8 +19,6 @@ export default function MainLayout() {
       <main className={`grow w-full max-w-7xl mx-auto pt-18`}>
         <Outlet />
       </main>
-
-
       <Footer />
       <WhatsAppWidget />
       <DisclaimerBanner />

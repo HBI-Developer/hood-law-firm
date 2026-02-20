@@ -14,24 +14,23 @@ export default function LanguageSwitcher({
   fullWidth?: boolean;
   close?: () => void;
 }) {
-  const { i18n } = useTranslation();
-  const language = useSelector((state: RootState) => state.language.locale);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const toggleLanguage = () => {
-    dispatch(isLoading());
-    dispatch(isHiddenOverflow());
-    setTimeout(() => {
-      const newLang = language === "ar" ? "en" : "ar";
-      const newPath = location.pathname.replace(`/${language}`, `/${newLang}`);
-      dispatch(setLanguage(newLang));
-      i18n.changeLanguage(newLang);
-      localStorage.setItem("i18nextLng", newLang);
-      navigate(newPath);
-      close?.();
-    }, 300);
-  };
+  const { i18n } = useTranslation(),
+    language = useSelector((state: RootState) => state.language.locale),
+    dispatch = useDispatch(),
+    navigate = useNavigate(),
+    toggleLanguage = () => {
+      dispatch(isLoading());
+      dispatch(isHiddenOverflow());
+      setTimeout(() => {
+        const newLang = language === "ar" ? "en" : "ar",
+          newPath = location.pathname.replace(`/${language}`, `/${newLang}`);
+        dispatch(setLanguage(newLang));
+        i18n.changeLanguage(newLang);
+        localStorage.setItem("i18nextLng", newLang);
+        navigate(newPath);
+        close?.();
+      }, 300);
+    };
 
   return (
     <Button

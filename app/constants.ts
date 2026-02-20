@@ -35,8 +35,6 @@ export const SUPPORTED_LANGUAGES = {
   en: { name: "English", direction: "ltr" },
 } as const;
 
-export type Locale = keyof typeof SUPPORTED_LANGUAGES;
-
 export const LOGO_BY_LANGUAGE = {
   ar: arLogo,
   en: enLogo,
@@ -46,6 +44,12 @@ export const MAP_LINK = "https://maps.app.goo.gl/TEkAMmnjWA9uwiwS8";
 
 export const EMBED_MAP_LINK =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d64722591.56959051!2d-149.23960340000002!3d-8.065379849999985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x76ed042c30f318eb%3A0x8eff14a070876cbc!2z2KfZhNmF2K3Ziti3INin2YTZh9in2K_Zig!5e0!3m2!1sar!2sru!4v1771087928240!5m2!1sar!2sru";
+
+export const JOB_TYPES = {
+  1: "full_time",
+  2: "part_time",
+  3: "internship",
+} as const;
 
 export const CHECK_CONTACT_FIELDS_SCHEMA = z.object({
   firstName: z
@@ -124,7 +128,7 @@ export const CHECK_JOB_APPLICATION_SCHEMA = z.object({
   coverLetter: z.string().optional(),
 });
 
-export const MAXIMUM_PDF_RESUME_SIZE = 5; // in megabytes
+export const MAXIMUM_PDF_RESUME_SIZE = 5; // in Megabytes
 
 export const ARTICLES_IN_PAGE = 6;
 

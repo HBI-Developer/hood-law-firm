@@ -10,4 +10,5 @@ export { default as LoadingScreen } from "./LoadingScreen";
 export { default as NavLink } from "./NavLink";
 export { default as DisclaimerBanner } from "./DisclaimerBanner";
 export { default as RecaptchaManager } from "./RecaptchaManager";
+export { Switch } from "./Switch";
 export { default as WhatsAppWidget } from "./WhatsAppWidget";

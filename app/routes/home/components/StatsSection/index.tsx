@@ -6,17 +6,15 @@ import type { InferSelectModel } from "drizzle-orm";
 import type { stats } from "~/databases/schema";
 
 export default function StatsSection() {
-  const { t } = useTranslation();
-  const loaderData = useLoaderData();
-  const fetcher = useFetcher();
-
-  const statsList = fetcher.data?.stats ?? loaderData.stats;
-  const hasError = fetcher.data?.statsError ?? loaderData.statsError;
-  const isLoading = fetcher.state !== "idle";
-
-  const handleRetry = () => {
-    fetcher.load(window.location.pathname);
-  };
+  const { t } = useTranslation(),
+    loaderData = useLoaderData(),
+    fetcher = useFetcher(),
+    statsList = fetcher.data?.stats ?? loaderData.stats,
+    hasError = fetcher.data?.statsError ?? loaderData.statsError,
+    isLoading = fetcher.state !== "idle",
+    handleRetry = () => {
+      fetcher.load(window.location.pathname);
+    };
 
   return (
     <section className="py-24 bg-primary">

@@ -5,24 +5,23 @@ import z from "zod";
 import { CHECK_JOB_APPLICATION_SCHEMA } from "~/constants";
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const payload = {
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    job: formData.get("job"),
-    resume: formData.get("resume"),
-    coverLetter: formData.get("coverLetter"),
-    recaptchaToken: formData.get("recaptchaToken"),
-  };
+  const formData = await request.formData(),
+    payload = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      job: formData.get("job"),
+      resume: formData.get("resume"),
+      coverLetter: formData.get("coverLetter"),
+      recaptchaToken: formData.get("recaptchaToken"),
+    },
+    schema = CHECK_JOB_APPLICATION_SCHEMA.extend({
+      job: z.string().min(1, { message: "job_required" }),
+      recaptchaToken: z.string().min(1, { message: "recaptcha_required" }),
+    }),
+    result = schema.safeParse(payload);
 
-  const schema = CHECK_JOB_APPLICATION_SCHEMA.extend({
-    job: z.string().min(1, { message: "job_required" }),
-    recaptchaToken: z.string().min(1, { message: "recaptcha_required" }),
-  });
-
-  const result = schema.safeParse(payload);
   if (!result.success) {
     return data(
       {
@@ -34,30 +33,29 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    job,
-    resume,
-    coverLetter,
-    recaptchaToken,
-  } = result.data;
-
-  const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
+      firstName,
+      lastName,
+      email,
+      phone,
+      job,
+      resume,
+      coverLetter,
+      recaptchaToken,
+    } = result.data,
+    RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
   if (!RECAPTCHA_SECRET) {
     console.error("Critical: RECAPTCHA_SECRET_KEY is missing in .env");
   } else {
     try {
       const recaptchaRes = await fetch(
-        "https://www.google.com/recaptcha/api/siteverify",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `secret=${RECAPTCHA_SECRET}&response=${recaptchaToken}`,
-        },
-      );
-      const recaptchaJson = await recaptchaRes.json();
+          "https://www.google.com/recaptcha/api/siteverify",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `secret=${RECAPTCHA_SECRET}&response=${recaptchaToken}`,
+          },
+        ),
+        recaptchaJson = await recaptchaRes.json();
 
       if (!recaptchaJson.success || recaptchaJson.score < 0.5) {
         return data(
@@ -71,11 +69,13 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const BREVO_KEY = process.env.BREVO_API_KEY;
+
   if (!BREVO_KEY) {
     return data({ status: "server_error" }, { status: 500 });
   }
 
   const apiInstance = new Brevo.TransactionalEmailsApi();
+
   apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, BREVO_KEY);
 
   const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -85,6 +85,7 @@ export async function action({ request }: ActionFunctionArgs) {
     name: "موقع هود بن عادل للمحاماة - طلب توظيف",
     email: process.env.SENDER_EMAIL,
   };
+
   sendSmtpEmail.to = [
     {
       email: process.env.OFFICE_RECEIVER_EMAIL as string,

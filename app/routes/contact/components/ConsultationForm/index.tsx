@@ -8,29 +8,35 @@ import * as z from "zod";
 import { toast, Toaster } from "sonner";
 import "react-phone-number-input/style.css";
 import { CHECK_CONTACT_FIELDS_SCHEMA } from "~/constants";
-import { useFetcher } from "react-router";
+import { useFetcher, useLoaderData } from "react-router";
 import { useEffect, useState } from "react";
 import { useGetUserCountry } from "~/hooks/useGetUserCountry";
+import type { InferSelectModel } from "drizzle-orm";
+import { services } from "~/databases/schema";
+import { Switch } from "~/components";
 
 type FormData = z.infer<typeof CHECK_CONTACT_FIELDS_SCHEMA>;
 
 export default function ConsultationForm() {
-  const { t } = useTranslation();
-  const { executeRecaptcha } = useGoogleReCaptcha();
-  const fetcher = useFetcher();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    setError,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(CHECK_CONTACT_FIELDS_SCHEMA),
-    mode: "onSubmit",
-  });
+  const { t } = useTranslation(),
+    { executeRecaptcha } = useGoogleReCaptcha(),
+    fetcher = useFetcher(),
+    [isSubmitting, setIsSubmitting] = useState(false),
+    { services: servicesCollection, servicesError } = useLoaderData<{
+      services: Array<InferSelectModel<typeof services>>;
+      servicesError: boolean;
+    }>(),
+    {
+      register,
+      handleSubmit,
+      control,
+      reset,
+      setError,
+      formState: { errors },
+    } = useForm<FormData>({
+      resolver: zodResolver(CHECK_CONTACT_FIELDS_SCHEMA),
+      mode: "onSubmit",
+    });
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -79,8 +85,8 @@ export default function ConsultationForm() {
     setIsSubmitting(true);
 
     try {
-      const token = await executeRecaptcha("contact_form");
-      const formData = new FormData();
+      const token = await executeRecaptcha("contact_form"),
+        formData = new FormData();
       Object.entries(data).forEach(([key, value]) =>
         formData.append(key, value),
       );
@@ -103,11 +109,10 @@ export default function ConsultationForm() {
     }
   };
 
-  const errorClass = "border-red-500 bg-red-50/30 focus:border-red-600";
-  const normalClass =
-    "border-secondary/10 bg-secondary/5 focus:border-side-2 focus:bg-white";
-
-  const defaultCountry = useGetUserCountry(); // Dynamic country detection
+  const errorClass = "border-red-500 bg-red-50/30 focus:border-red-600",
+    normalClass =
+      "border-secondary/10 bg-secondary/5 focus:border-side-2 focus:bg-white",
+    defaultCountry = useGetUserCountry();
 
   return (
     <>
@@ -218,13 +223,20 @@ export default function ConsultationForm() {
                       errors.subject ? errorClass : normalClass
                     }`}
                   >
-                    <option value="general">
-                      {t("services.items.general.title")}
-                    </option>
-                    <option value="corporate">
-                      {t("services.items.corporate.title")}
-                    </option>
-                    <option value="ip">{t("services.items.ip.title")}</option>
+                    <Switch.Root>
+                      <Switch.Case condition={!servicesError}>
+                        {servicesCollection.map((service) => (
+                          <option value={service.slug} key={service.id}>
+                            {service.label}
+                          </option>
+                        ))}
+                      </Switch.Case>
+                      <Switch.Default>
+                        <option value="general-legal">
+                          {t("services.items.general.title")}
+                        </option>
+                      </Switch.Default>
+                    </Switch.Root>
                   </select>
                   <Icon
                     icon="solar:alt-arrow-down-bold-duotone"

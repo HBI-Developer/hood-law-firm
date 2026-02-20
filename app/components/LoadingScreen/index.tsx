@@ -3,9 +3,9 @@ import logo from "~/assets/icon.svg";
 import { ANIMATION_DURATION } from "~/constants";
 
 export default function LoadingScreen({ open }: { open: boolean }) {
-  const [shouldRender, setShouldRender] = useState(open);
-  const [ripples, setRipples] = useState<number[]>([]);
-  const isFirstTime = useRef(true);
+  const [shouldRender, setShouldRender] = useState(open),
+    [ripples, setRipples] = useState<number[]>([]),
+    isFirstTime = useRef(true);
 
   useEffect(() => {
     if (open) {

@@ -20,11 +20,7 @@ import "./i18n";
 import { store } from "./store";
 import { LanguageManager } from "./components";
 import { createCookie } from "react-router";
-import {
-  DEFAULT_LANGUAGE,
-  SUPPORTED_LANGUAGES,
-  type Locale,
-} from "./constants";
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "./constants";
 import NotFound from "./routes/not-found";
 
 export const links: Route.LinksFunction = () => [
@@ -48,9 +44,9 @@ export const localeCookie = createCookie("language", {
 });
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const url = new URL(request.url);
-  const supportedLanguages = Object.keys(SUPPORTED_LANGUAGES);
+  const cookieHeader = request.headers.get("Cookie"),
+    url = new URL(request.url),
+    supportedLanguages = Object.keys(SUPPORTED_LANGUAGES);
 
   let locale = params.lang || url.searchParams.get("lng");
 
@@ -118,10 +114,9 @@ export default function App() {
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const { t, i18n } = useTranslation();
-  let statusCode = 500;
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  let statusCode = 500,
+    details = "An unexpected error occurred.",
+    stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
     statusCode = error.status;

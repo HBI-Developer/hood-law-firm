@@ -12,16 +12,15 @@ export default function VideoPlayer({
   poster,
   onClose,
 }: VideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) videoRef.current.pause();
-      else videoRef.current.play();
-      setIsPlaying(!isPlaying);
-    }
-  };
+  const videoRef = useRef<HTMLVideoElement>(null),
+    [isPlaying, setIsPlaying] = useState(true),
+    togglePlay = () => {
+      if (videoRef.current) {
+        if (isPlaying) videoRef.current.pause();
+        else videoRef.current.play();
+        setIsPlaying(!isPlaying);
+      }
+    };
 
   return (
     <div className="absolute inset-0 z-20 bg-black animate-[fade-in_0.5s_ease-out]">
@@ -33,7 +32,6 @@ export default function VideoPlayer({
         poster={poster}
       />
 
-      {/* شريط تحكم فائق البساطة */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-8 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">
         <button
           onClick={togglePlay}

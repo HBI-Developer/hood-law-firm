@@ -2,13 +2,18 @@ import { getFixedT } from "~/i18n/server";
 import { data, type LoaderFunctionArgs } from "react-router";
 import { ConsultationForm, ContactHero } from "./components";
 import { RecaptchaManager } from "~/components";
+import { hooddb } from "~/constants.server";
 
 export { action } from "./actions/sendEmail";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const t = await getFixedT(request),
+    { lang } = params as { lang: Locale },
+    [services, servicesError] = await hooddb.getServices(lang);
 
   return data({
+    services,
+    servicesError,
     metaTags: {
       title: t("title", { title: t("link.contact") }),
       description: t("contact.description"),

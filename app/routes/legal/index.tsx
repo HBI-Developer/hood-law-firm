@@ -1,8 +1,5 @@
 import { getFixedT } from "~/i18n/server";
 import { data, useLoaderData, type LoaderFunctionArgs } from "react-router";
-import { and, eq } from "drizzle-orm";
-import { legal } from "~/databases/schema";
-import { db } from "~/databases/config.server";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
@@ -12,38 +9,20 @@ import calculateReadingTime from "~/utils/calculateReadingTime";
 import { ReadingProgressBar } from "../article/components";
 import getReadingTime from "~/utils/getReadingTime";
 import { ArticleContent } from "~/components";
+import { hooddb } from "~/constants.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const { lang, slug } = params;
+  const t = await getFixedT(request),
+    { lang, slug } = params as { lang: Locale; slug: string },
+    [article, error] = await hooddb.getLegal(lang, slug);
 
-  try {
-    const whereClause = and(
-      eq(legal.lang, lang || "en"),
-      eq(legal.slug, slug || "404"),
-    );
-
-    return data({
-      article: await db.query.legal.findFirst({
-        where: whereClause,
-      }),
-      metaTags: {
-        title: t("title", {
-          title: t(`footer.${slug?.replaceAll("-", "_")}`),
-        }),
-        description: t("about.description"),
-      },
-    });
-  } catch (error) {
-    console.error("Failed to fetch static:", error);
-    return data({
-      article: null,
-      metaTags: {
-        title: t("title", { title: " | " + t("footer.terms") }),
-        description: t("about.description"),
-      },
-    });
-  }
+  return data({
+    article: article && !error ? article : null,
+    metaTags: {
+      title: t("title", { title: " | " + t("footer.terms") }),
+      description: t("about.description"),
+    },
+  });
 };
 
 // @ts-expect-error TypeScript Analyzer is wrong
@@ -56,10 +35,10 @@ export function meta({ data }: typeof loader) {
 }
 
 export default function TermsAndConditions() {
-  const { article } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
-  const locale = useSelector((state: RootState) => state.language.locale);
-  const articleContentRef = useRef<HTMLElement>(null);
+  const { article } = useLoaderData<typeof loader>(),
+    { t } = useTranslation(),
+    locale = useSelector((state: RootState) => state.language.locale),
+    articleContentRef = useRef<HTMLElement>(null);
 
   if (!article) {
     return (

@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import {
   CHECK_JOB_APPLICATION_SCHEMA,
   MAXIMUM_PDF_RESUME_SIZE,
@@ -14,6 +13,7 @@ import {
 import { useFetcher } from "react-router";
 import validateFile from "../../functions/validateFile";
 import { useGetUserCountry } from "~/hooks/useGetUserCountry";
+import "react-phone-number-input/style.css";
 
 type FormData = z.infer<typeof CHECK_JOB_APPLICATION_SCHEMA>;
 
@@ -28,27 +28,25 @@ export default function ApplicationFormView({
   onClose: () => void;
   t: any;
 }) {
-  const defaultCountry = useGetUserCountry(); // Dynamic country detection
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const { executeRecaptcha } = useGoogleReCaptcha();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const fetcher = useFetcher();
-  const [resumeError, setResumeError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    setError,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(CHECK_JOB_APPLICATION_SCHEMA),
-    mode: "onSubmit",
-  });
+  const defaultCountry = useGetUserCountry(),
+    [isSubmitting, setIsSubmitting] = useState(false),
+    [isSubmitted, setIsSubmitted] = useState(false),
+    { executeRecaptcha } = useGoogleReCaptcha(),
+    fileInputRef = useRef<HTMLInputElement>(null),
+    [resumeFile, setResumeFile] = useState<File | null>(null),
+    fetcher = useFetcher(),
+    [resumeError, setResumeError] = useState<string | null>(null),
+    {
+      register,
+      handleSubmit,
+      control,
+      reset,
+      setError,
+      formState: { errors },
+    } = useForm<FormData>({
+      resolver: zodResolver(CHECK_JOB_APPLICATION_SCHEMA),
+      mode: "onSubmit",
+    });
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
@@ -80,54 +78,53 @@ export default function ApplicationFormView({
   }, [fetcher.data, fetcher.state, reset, setError, t]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const error = await validateFile(file);
-      if (error) {
-        setResumeError(error);
-        setResumeFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      } else {
-        setResumeError(null);
-        setResumeFile(file);
-      }
-    }
-  };
-
-  const onSubmit = async (data: FormData) => {
-    if (!executeRecaptcha) {
-      toast.error(t("toast.recaptcha_not_ready") || "ReCAPTCHA is not ready");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const token = await executeRecaptcha("job_application");
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value as string | Blob);
+      const file = e.target.files?.[0];
+      if (file) {
+        const error = await validateFile(file);
+        if (error) {
+          setResumeError(error);
+          setResumeFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        } else {
+          setResumeError(null);
+          setResumeFile(file);
         }
-      });
+      }
+    },
+    onSubmit = async (data: FormData) => {
+      if (!executeRecaptcha) {
+        toast.error(t("toast.recaptcha_not_ready") || "ReCAPTCHA is not ready");
+        return;
+      }
 
-      formData.append("job", jobTitle);
-      formData.append("recaptchaToken", token);
-      if (resumeFile) formData.append("resume", resumeFile);
+      setIsSubmitting(true);
 
-      fetcher.submit(formData, {
-        method: "POST",
-        encType: "multipart/form-data",
-        action: window.location.pathname,
-      });
-    } catch (e) {
-      setIsSubmitting(false);
-      toast.error(t("toast.error_title") || "Error", {
-        description: t("toast.error_retry") || "Failed to send application",
-      });
-    }
-  };
+      try {
+        const token = await executeRecaptcha("job_application"),
+          formData = new FormData();
+
+        Object.entries(data).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+            formData.append(key, value as string | Blob);
+          }
+        });
+
+        formData.append("job", jobTitle);
+        formData.append("recaptchaToken", token);
+        if (resumeFile) formData.append("resume", resumeFile);
+
+        fetcher.submit(formData, {
+          method: "POST",
+          encType: "multipart/form-data",
+          action: window.location.pathname,
+        });
+      } catch (e) {
+        setIsSubmitting(false);
+        toast.error(t("toast.error_title") || "Error", {
+          description: t("toast.error_retry") || "Failed to send application",
+        });
+      }
+    };
 
   if (isSubmitted) {
     return (
@@ -155,8 +152,8 @@ export default function ApplicationFormView({
     );
   }
 
-  const errorClass = "border-red-500 bg-red-50/10 focus:ring-red-500";
-  const normalClass = "border-secondary/20 focus:ring-side-2";
+  const errorClass = "border-red-500 bg-red-50/10 focus:ring-red-500",
+    normalClass = "border-secondary/20 focus:ring-side-2";
 
   return (
     <fetcher.Form
@@ -165,7 +162,6 @@ export default function ApplicationFormView({
     >
       <div className="grow space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* First Name */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-secondary font-secondary">
               {t("form.first_name")} *
@@ -184,7 +180,6 @@ export default function ApplicationFormView({
             )}
           </div>
 
-          {/* Last Name */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-secondary font-secondary">
               {t("form.last_name")} *
@@ -203,7 +198,6 @@ export default function ApplicationFormView({
             )}
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-secondary font-secondary">
               {t("form.email")} *
@@ -222,7 +216,6 @@ export default function ApplicationFormView({
             )}
           </div>
 
-          {/* Phone */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-secondary font-secondary">
               {t("form.phone")} *
@@ -231,7 +224,7 @@ export default function ApplicationFormView({
               <Controller
                 name="phone"
                 control={control}
-                  render={({ field }) => (
+                render={({ field }) => (
                   <PhoneInput
                     {...field}
                     international
@@ -252,7 +245,6 @@ export default function ApplicationFormView({
           </div>
         </div>
 
-        {/* Resume */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-secondary font-secondary">
             {t("careers.form.resume") || "السيرة الذاتية (PDF)"}
@@ -297,7 +289,6 @@ export default function ApplicationFormView({
           )}
         </div>
 
-        {/* Cover Letter */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-secondary font-secondary">
             {t("careers.form.coverLetter") || "خطاب التوصية"}

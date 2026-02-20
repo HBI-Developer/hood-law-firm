@@ -1,7 +1,7 @@
-import { JOB_TYPES, type Job } from "~/data/jobs";
 import InfoItem from "../InfoItem";
 import { Icon } from "@iconify/react";
 import getOpportunities from "../../functions/getOpportunities";
+import { JOB_TYPES } from "~/constants";
 
 export default function JobDetailsView({
   job,
@@ -13,30 +13,26 @@ export default function JobDetailsView({
   i18n: any;
 }) {
   const parseJSON = (str: string) => {
-    try {
-      return JSON.parse(str);
-    } catch {
-      return [];
-    }
-  };
-
-  const requirements = parseJSON(job.requirements);
-  const duties = parseJSON(job.duties);
-  const expectations = parseJSON(job.expectations);
-  const notes = job.notes ? parseJSON(job.notes) : null;
-
-  const typeKey = JOB_TYPES[job.type as keyof typeof JOB_TYPES] || "full_time";
-  const typeLabel = t(`careers.${typeKey}`);
-
-  const formattedDeadline = new Intl.DateTimeFormat(i18n.language, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(job.deadline));
+      try {
+        return JSON.parse(str);
+      } catch {
+        return [];
+      }
+    },
+    requirements = parseJSON(job.requirements),
+    duties = parseJSON(job.duties),
+    expectations = parseJSON(job.expectations),
+    notes = job.notes ? parseJSON(job.notes) : null,
+    typeKey = JOB_TYPES[job.type as keyof typeof JOB_TYPES] || "full_time",
+    typeLabel = t(`careers.${typeKey}`),
+    formattedDeadline = new Intl.DateTimeFormat(i18n.language, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(new Date(job.deadline));
 
   return (
     <div className="space-y-8 pb-4">
-      {/* Quick Info Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rtl:text-right">
         <InfoItem
           label={t("careers.opportunities") || "الفرص المتوفرة"}
@@ -60,7 +56,6 @@ export default function JobDetailsView({
         />
       </div>
 
-      {/* Description */}
       <section>
         <h3 className="text-xl font-bold text-side-2 mb-4 border-b border-secondary/10 pb-2 font-primary">
           {t("careers.jobDescription") || "الوصف الوظيفي"}
@@ -70,7 +65,6 @@ export default function JobDetailsView({
         </p>
       </section>
 
-      {/* Duties */}
       <section>
         <h3 className="text-xl font-bold text-side-2 mb-4 border-b border-secondary/10 pb-2 font-primary">
           {t("careers.duties") || "المهام والمسؤوليات"}
@@ -82,7 +76,6 @@ export default function JobDetailsView({
         </ul>
       </section>
 
-      {/* Requirements */}
       <section>
         <h3 className="text-xl font-bold text-side-2 mb-4 border-b border-secondary/10 pb-2 font-primary">
           {t("careers.requirements") || "المتطلبات"}
@@ -94,7 +87,6 @@ export default function JobDetailsView({
         </ul>
       </section>
 
-      {/* Expectations */}
       <section>
         <h3 className="text-xl font-bold text-side-2 mb-4 border-b border-secondary/10 pb-2 font-primary">
           {t("careers.expectations") || "التوقعات"}

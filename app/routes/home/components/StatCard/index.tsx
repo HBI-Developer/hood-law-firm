@@ -19,17 +19,16 @@ export default function StatCard({
   suffix = "",
   duration = 2000,
 }: StatCardProps) {
-  const [count, setCount] = useState(0);
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
-  const countRef = useRef(0);
+  const [count, setCount] = useState(0),
+    { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
 
   useEffect(() => {
     if (inView) {
       let startTime: number | null = null;
       const animate = (currentTime: number) => {
         if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        const nextCount = Math.floor(progress * stat);
+        const progress = Math.min((currentTime - startTime) / duration, 1),
+          nextCount = Math.floor(progress * stat);
 
         setCount(nextCount);
 

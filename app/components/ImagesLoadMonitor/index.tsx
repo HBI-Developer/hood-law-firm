@@ -16,15 +16,13 @@ interface Props {
 }
 
 export default function ImagesLoadMonitor({ className, children }: Props) {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const location = useLocation();
-  const locale = useSelector((state: RootState) => state.language.locale);
-  const lastPath = useRef("");
-  const overflow = useSelector(
-    (state: RootState) => state.loading.hiddenOverflow,
-  );
-  const { tracker, isLoaded: isImagesLoaded, repeating } = useImagesTracker();
+  const dispatch = useDispatch(),
+    navigation = useNavigation(),
+    location = useLocation(),
+    locale = useSelector((state: RootState) => state.language.locale),
+    lastPath = useRef(""),
+    overflow = useSelector((state: RootState) => state.loading.hiddenOverflow),
+    { tracker, isLoaded: isImagesLoaded, repeating } = useImagesTracker();
 
   useEffect(() => {
     if (location) {

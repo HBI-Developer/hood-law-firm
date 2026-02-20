@@ -2,16 +2,14 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useRef } from "react";
 
 export default function AboutHero() {
-  const { t, i18n } = useTranslation();
-  const isRtl = i18n.language === "ar";
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-  const borderRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-
-  const mouse = useRef({ x: 0, y: 0 });
-  const lerpMouse = useRef({ x: 0, y: 0 });
+  const { t, i18n } = useTranslation(),
+    isRtl = i18n.language === "ar",
+    containerRef = useRef<HTMLDivElement>(null),
+    bgRef = useRef<HTMLDivElement>(null),
+    borderRef = useRef<HTMLDivElement>(null),
+    textRef = useRef<HTMLDivElement>(null),
+    mouse = useRef({ x: 0, y: 0 }),
+    lerpMouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

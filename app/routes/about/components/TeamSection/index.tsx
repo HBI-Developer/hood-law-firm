@@ -1,71 +1,94 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useKeenSlider, type KeenSliderPlugin } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css";
 import { useFetcher, useLoaderData } from "react-router";
 import type { InferSelectModel } from "drizzle-orm";
 import type { team } from "~/databases/schema";
 import { Icon as Iconify } from "@iconify/react";
+import "keen-slider/keen-slider.min.css";
 
 type Category = 1 | 2; // 1 => "consultants", 2 => "admins"
 
 const getJob = (job: number) => {
-  switch (job) {
-    case 1:
-      return "admin";
-    case 2:
-      return "consultant";
-    default:
-      return;
-  }
-};
-
-const wheelPlugin: KeenSliderPlugin = (slider) => {
-  const handleWheel = (e: WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
-    delta > 0 ? slider.next() : slider.prev();
+    switch (job) {
+      case 1:
+        return "admin";
+      case 2:
+        return "consultant";
+      default:
+        return;
+    }
+  },
+  wheelPlugin: KeenSliderPlugin = (slider) => {
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
+      delta > 0 ? slider.next() : slider.prev();
+    };
+    slider.on("created", () => {
+      slider.container.addEventListener("wheel", handleWheel, {
+        passive: false,
+      });
+    });
+  },
+  autoplayPlugin: KeenSliderPlugin = (slider) => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const clear = () => clearTimeout(timeout),
+      next = () => {
+        clear();
+        timeout = setTimeout(() => slider.next(), 7000);
+      };
+    slider.on("created", next);
+    slider.on("animationEnded", next);
+    slider.on("updated", next);
+    slider.on("destroyed", clear);
   };
-  slider.on("created", () => {
-    slider.container.addEventListener("wheel", handleWheel, { passive: false });
-  });
-};
-
-const autoplayPlugin: KeenSliderPlugin = (slider) => {
-  let timeout: ReturnType<typeof setTimeout>;
-  const clear = () => clearTimeout(timeout);
-  const next = () => {
-    clear();
-    timeout = setTimeout(() => slider.next(), 7000);
-  };
-  slider.on("created", next);
-  slider.on("animationEnded", next);
-  slider.on("updated", next);
-  slider.on("destroyed", clear);
-};
 
 export default function TeamSection() {
-  const { t, i18n } = useTranslation();
-  const isRtl = i18n.language === "ar";
-  const [activeTab, setActiveTab] = useState<Category>(1);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-  const sliderKeyRef = useRef(0);
-
-  const loaderData = useLoaderData();
-  const fetcher = useFetcher();
-
-  const TEAM_DATA = fetcher.data?.team ?? loaderData.team ?? [];
-  const teamError = fetcher.data?.teamError ?? loaderData.teamError;
-  const isLoading = fetcher.state !== "idle";
-
-  const [currentTeam, setCurrentTeam] = useState<typeof TEAM_DATA>(
-    TEAM_DATA.filter((member: any) => member.job === activeTab),
-  );
-
-  const handleRetry = () => {
-    fetcher.load(window.location.pathname);
-  };
+  const { t, i18n } = useTranslation(),
+    isRtl = i18n.language === "ar",
+    [activeTab, setActiveTab] = useState<Category>(1),
+    [currentSlide, setCurrentSlide] = useState(0),
+    [loaded, setLoaded] = useState(false),
+    sliderKeyRef = useRef(0),
+    loaderData = useLoaderData(),
+    fetcher = useFetcher(),
+    TEAM_DATA = fetcher.data?.team ?? loaderData.team ?? [],
+    teamError = fetcher.data?.teamError ?? loaderData.teamError,
+    isLoading = fetcher.state !== "idle",
+    [currentTeam, setCurrentTeam] = useState<typeof TEAM_DATA>(
+      TEAM_DATA.filter((member: any) => member.job === activeTab),
+    ),
+    handleRetry = () => {
+      fetcher.load(window.location.pathname);
+    },
+    changeTeam = useCallback(() => {
+      setCurrentTeam(
+        TEAM_DATA.filter((member: any) => member.job === activeTab),
+      );
+    }, [TEAM_DATA, activeTab]),
+    [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
+      {
+        loop: true,
+        rtl: isRtl,
+        initial: 0,
+        drag: true,
+        slides: {
+          perView: 1,
+          spacing: 0,
+        },
+        slideChanged(s) {
+          setCurrentSlide(s.track.details.rel);
+        },
+        created() {
+          setLoaded(true);
+        },
+      },
+      [wheelPlugin, autoplayPlugin],
+    ),
+    handleTabChange = (cat: Category) => {
+      setActiveTab(cat);
+    };
 
   useEffect(() => {
     sliderKeyRef.current += 1;
@@ -73,33 +96,9 @@ export default function TeamSection() {
     setLoaded(false);
   }, [activeTab]);
 
-  const changeTeam = useCallback(() => {
-    setCurrentTeam(TEAM_DATA.filter((member: any) => member.job === activeTab));
-  }, [TEAM_DATA, activeTab]);
-
   useEffect(() => {
     changeTeam();
   }, [changeTeam]);
-
-  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
-    {
-      loop: true,
-      rtl: isRtl,
-      initial: 0,
-      drag: true,
-      slides: {
-        perView: 1,
-        spacing: 0,
-      },
-      slideChanged(s) {
-        setCurrentSlide(s.track.details.rel);
-      },
-      created() {
-        setLoaded(true);
-      },
-    },
-    [wheelPlugin, autoplayPlugin],
-  );
 
   useEffect(() => {
     if (instanceRef.current && loaded) {
@@ -107,14 +106,9 @@ export default function TeamSection() {
     }
   }, [currentTeam, loaded, instanceRef]);
 
-  const handleTabChange = (cat: Category) => {
-    setActiveTab(cat);
-  };
-
   return (
     <section className="py-16 md:py-24 bg-[#FDFDFD] overflow-hidden">
       <div className="container mx-auto px-6">
-        {/* 1. Header & Tabs */}
         <div className="flex justify-center mb-12 md:mb-16">
           <div className="flex bg-secondary/5 p-1.5 rounded-2xl border border-secondary/10 w-full max-w-4xl shadow-inner">
             {([1, 2] as const).map((cat) => (
@@ -133,7 +127,6 @@ export default function TeamSection() {
           </div>
         </div>
 
-        {/* 2. Content Area (Slider or States) */}
         {teamError ? (
           <div className="bg-white p-10 md:p-20 rounded-3xl border border-secondary/5 shadow-sm text-center max-w-4xl mx-auto">
             <div className="bg-red-50 p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
@@ -193,7 +186,6 @@ export default function TeamSection() {
                     className="keen-slider__slide px-2"
                   >
                     <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 bg-white p-6 md:p-14 rounded-3xl border border-secondary/5 shadow-sm">
-                      {/* صورة الشخص */}
                       <div
                         className={`w-full lg:w-1/3 aspect-4/5 rounded-2xl overflow-hidden transition-all duration-1000 ${
                           currentSlide === idx
@@ -208,7 +200,6 @@ export default function TeamSection() {
                         />
                       </div>
 
-                      {/* المحتوى */}
                       <div
                         className={`w-full lg:w-2/3 space-y-4 md:space-y-6 text-center lg:text-start transition-all duration-1000 ${
                           currentSlide === idx
@@ -235,7 +226,6 @@ export default function TeamSection() {
               )}
             </div>
 
-            {/* Navigation */}
             {loaded && currentTeam.length > 0 && (
               <div className="mt-8 md:mt-12">
                 <div className="flex md:hidden justify-center gap-2">

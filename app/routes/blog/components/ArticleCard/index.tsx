@@ -9,9 +9,9 @@ interface Props {
 }
 
 export default function ArticleCard({ article }: Props) {
-  const summary = getArticleSummary(article.content);
-  const { t } = useTranslation();
-  const locale = useSelector((state: RootState) => state.language.locale);
+  const summary = getArticleSummary(article.content),
+    { t } = useTranslation(),
+    locale = useSelector((state: RootState) => state.language.locale);
 
   return (
     <NavLink

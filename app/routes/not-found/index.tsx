@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Button } from "react-aria-components";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
-import type { Locale } from "~/constants";
 
 interface Props {
   loaderData?: {

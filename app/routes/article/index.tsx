@@ -1,13 +1,4 @@
-import { getFixedT } from "~/i18n/server";
-import {
-  data,
-  redirect,
-  useLoaderData,
-  type LoaderFunctionArgs,
-} from "react-router";
-import { db } from "~/databases/config.server";
-import { and, eq, lt, gt, desc, asc } from "drizzle-orm";
-import { articles } from "~/databases/schema";
+import { data, useLoaderData, type LoaderFunctionArgs } from "react-router";
 import getArticleSummary from "../blog/functions/getArticleSummary";
 import { createCookie } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -20,6 +11,7 @@ import calculateReadingTime from "~/utils/calculateReadingTime";
 import { ReadingProgressBar } from "./components";
 import getReadingTime from "~/utils/getReadingTime";
 import getViews from "./functions/getViews";
+import { hooddb } from "~/constants.server";
 
 export const viewedArticlesCookie = createCookie("viewed_articles", {
   path: "/",
@@ -29,57 +21,39 @@ export const viewedArticlesCookie = createCookie("viewed_articles", {
 });
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const { lang, slug } = params;
+  const { lang, slug } = params as { lang: Locale; slug: string };
 
   if (!lang || !slug) throw data({ message: "Not Found" }, { status: 404 });
 
-  const article = await db.query.articles.findFirst({
-    where: and(eq(articles.slug, slug || ""), eq(articles.lang, lang || "ar")),
-    with: {
-      categoryDetails: true,
-    },
-  });
+  const [article, error] = await hooddb.getArticle(lang, slug);
 
   if (!article) {
     throw data({ message: "Not Found" }, { status: 404 });
   }
 
-  const cookieHeader = request.headers.get("Cookie");
-  const viewedArticles = (await viewedArticlesCookie.parse(cookieHeader)) || [];
-  let updatedViews = article.views || 0;
-  let setCookieHeader: string | null = null;
+  if (error) {
+    throw data({ message: "Internal Error" }, { status: 500 });
+  }
+
+  const cookieHeader = request.headers.get("Cookie"),
+    viewedArticles = (await viewedArticlesCookie.parse(cookieHeader)) || [];
+
+  let updatedViews = article.views || 0,
+    setCookieHeader: string | null = null;
 
   if (!viewedArticles.includes(article.slug)) {
     updatedViews += 1;
-    await db
-      .update(articles)
-      .set({ views: updatedViews })
-      .where(eq(articles.id, article.id));
+
+    hooddb.updateArticleViews(article.id, updatedViews);
 
     viewedArticles.push(article.slug);
     setCookieHeader = await viewedArticlesCookie.serialize(viewedArticles);
   }
 
-  const [prevArticle, nextArticle] = await Promise.all([
-    db.query.articles.findFirst({
-      where: and(
-        eq(articles.lang, lang || "ar"),
-        lt(articles.createdAt, article.createdAt),
-      ),
-      orderBy: [desc(articles.createdAt)],
-    }),
-    db.query.articles.findFirst({
-      where: and(
-        eq(articles.lang, lang || "ar"),
-        gt(articles.createdAt, article.createdAt),
-      ),
-      orderBy: [asc(articles.createdAt)],
-    }),
-  ]);
-
-  const readingTime = calculateReadingTime(article.content);
-  const summary = await getArticleSummary(article.content);
+  const [prevArticle] = await hooddb.getPrevArticle(lang, article.createdAt),
+    [nextArticle] = await hooddb.getNextArticle(lang, article.createdAt),
+    readingTime = calculateReadingTime(article.content),
+    summary = await getArticleSummary(article.content);
 
   return data(
     {
@@ -111,19 +85,18 @@ export function meta({ data }: typeof loader) {
 }
 
 export default function Article() {
-  const { article, prevArticle, nextArticle } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
-  const locale = useSelector((state: RootState) => state.language.locale);
-  const isAr = locale === "ar";
-  const articleContentRef = useRef<HTMLElement>(null);
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString(isAr ? "ar-QA" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+  const { article, prevArticle, nextArticle } = useLoaderData<typeof loader>(),
+    { t } = useTranslation(),
+    locale = useSelector((state: RootState) => state.language.locale),
+    isAr = locale === "ar",
+    articleContentRef = useRef<HTMLElement>(null),
+    formatDate = (timestamp: number) => {
+      return new Date(timestamp).toLocaleDateString(isAr ? "ar-QA" : "en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    };
 
   return (
     <div className="bg-gray-50 min-h-screen">

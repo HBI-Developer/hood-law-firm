@@ -9,27 +9,19 @@ import i18n from "i18next";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import { setLanguage } from "~/store/slices/language";
-import {
-  DEFAULT_LANGUAGE,
-  SUPPORTED_LANGUAGES,
-  type Locale,
-} from "~/constants";
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "~/constants";
 
 export default function LanguageManager({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { lang } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
-
-  const { locale: reduxLocale } = useSelector(
-    (state: RootState) => state.language,
-  );
-
-  const rootData = useRouteLoaderData("root") as { locale: Locale } | undefined;
+  const { lang } = useParams(),
+    navigate = useNavigate(),
+    location = useLocation(),
+    dispatch = useDispatch(),
+    { locale: reduxLocale } = useSelector((state: RootState) => state.language),
+    rootData = useRouteLoaderData("root") as { locale: Locale } | undefined;
 
   useEffect(() => {
     const serverLocale = rootData?.locale;

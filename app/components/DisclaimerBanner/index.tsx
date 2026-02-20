@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
 
 export default function DisclaimerBanner() {
-  const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(true);
+  const { t } = useTranslation(),
+    [isVisible, setIsVisible] = useState(true);
 
-  if (!isVisible && sessionStorage.closeDisclaimer  === "true") return null;
+  if (!isVisible && sessionStorage.closeDisclaimer === "true") return null;
 
   return (
     <div className="fixed bottom-6 left-1/2 rounded-2xl -translate-x-1/2 z-50 w-[90%] max-w-lg animate-fade-in-up backdrop-blur-xs bg-secondary/60">
@@ -26,13 +26,15 @@ export default function DisclaimerBanner() {
             </p>
           </div>
           <button
-            onClick={() => {setIsVisible(false); sessionStorage.setItem("closeDisclaimer", "true")}}
+            onClick={() => {
+              setIsVisible(false);
+              sessionStorage.setItem("closeDisclaimer", "true");
+            }}
             className="shrink-0 text-white/50 hover:text-white transition-colors"
           >
             <Icon icon="mdi:close" className="h-5 w-5" />
           </button>
         </div>
-        {/* Decorative elements for extra glass effect */}
         <div className="absolute -top-10 -right-10 w-20 h-20 bg-side-2/20 blur-2xl rounded-full pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-20 h-20 bg-secondary/20 blur-2xl rounded-full pointer-events-none" />
       </div>

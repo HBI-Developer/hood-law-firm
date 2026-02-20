@@ -6,10 +6,10 @@ import { VideoPlayer } from "..";
 import { useNavigate, useParams } from "react-router";
 
 export default function HeroSection() {
-  const { t, i18n } = useTranslation();
-  const [isVideoMode, setIsVideoMode] = useState(false);
-  const navigate = useNavigate();
-  const { lang } = useParams();
+  const { t, i18n } = useTranslation(),
+    [isVideoMode, setIsVideoMode] = useState(false),
+    navigate = useNavigate(),
+    { lang } = useParams();
 
   return (
     <section

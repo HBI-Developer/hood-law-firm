@@ -26,9 +26,9 @@ function SocialIcon({ Icon, href, label }: SocialIconProps) {
 }
 
 export default function Footer() {
-  const { t } = useTranslation();
-  const currentYear = new Date().getFullYear();
-  const { locale } = useSelector((state: RootState) => state.language);
+  const { t } = useTranslation(),
+    currentYear = new Date().getFullYear(),
+    { locale } = useSelector((state: RootState) => state.language);
 
   return (
     <footer
@@ -41,7 +41,6 @@ export default function Footer() {
 
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* قسم التواصل */}
           <div className="space-y-6">
             <h3 className="text-2xl font-primary font-bold text-side-2">
               {t("footer.contact_title")}
@@ -93,7 +92,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* روابط سريعة */}
           <div className="space-y-6">
             <h3 className="text-xl font-primary font-bold">
               {t("footer.quick_links")}
@@ -113,7 +111,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* روابط قانونية */}
           <div className="space-y-6">
             <h3 className="text-xl font-primary font-bold">
               {t("footer.legal")}
@@ -132,7 +129,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* وسائل التواصل الاجتماعي */}
           <div className="space-y-6">
             <h3 className="text-xl font-primary font-bold text-center md:text-start">
               {t("footer.follow_us")}
@@ -162,7 +158,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* حقوق النشر */}
         <div className="pt-8 border-t border-white/5 text-center opacity-60 font-secondary text-sm">
           <p>{t("footer.rights", { year: currentYear })}</p>
         </div>

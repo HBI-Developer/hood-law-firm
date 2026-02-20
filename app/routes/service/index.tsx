@@ -1,33 +1,17 @@
 import { getFixedT } from "~/i18n/server";
 import { data, type LoaderFunctionArgs } from "react-router";
-import { and, eq, ne, type InferSelectModel } from "drizzle-orm";
-import { services } from "~/databases/schema";
-import { db } from "~/databases/config.server";
 import { useLoaderData, useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
 import { NavLink } from "~/components";
-import { useSelector } from "react-redux";
-import type { RootState } from "~/store";
 import { useState } from "react";
+import { ErrorView, NotFoundView } from "./components";
+import { hooddb } from "~/constants.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const { lang, slug } = params;
-
-  let service: InferSelectModel<typeof services> | undefined;
-  let serviceError = false;
-
-  try {
-    service = await db.query.services.findFirst({
-      where: and(
-        eq(services.slug, slug || ""),
-        eq(services.lang, lang || "en"),
-      ),
-    });
-  } catch (_) {
-    serviceError = true;
-  }
+  const t = await getFixedT(request),
+    { lang, slug } = params as { lang: Locale; slug: string },
+    [service, serviceError] = await hooddb.getService(lang || "en", slug);
 
   return data({
     service,
@@ -57,79 +41,17 @@ type ProcessSteps = Array<{
 type WhyChooseUs = Array<{ icon: string; title: string; description: string }>;
 type FAQs = Array<{ question: string; answer: string }>;
 
-// ──────────────────────────────────────────────
-//  Internal Layout Components
-// ──────────────────────────────────────────────
-
-const ErrorView = ({ onRetry, t }: { onRetry: () => void; t: any }) => (
-  <div className="min-h-[70vh] flex items-center justify-center px-6">
-    <div className="max-w-md w-full text-center animate-fade-in-up">
-      <div className="bg-side-2/10 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border border-side-2/20">
-        <Icon
-          icon="mdi:alert-circle-outline"
-          className="w-12 h-12 text-side-2"
-        />
-      </div>
-      <h2 className="text-3xl font-bold font-primary text-secondary mb-4">
-        {t("errors.error_fetching_data")}
-      </h2>
-      <p className="text-stone-500 font-secondary text-lg mb-10 leading-relaxed">
-        {t("errors.error_general.describe")}
-      </p>
-      <button
-        onClick={onRetry}
-        className="inline-flex items-center gap-2 bg-secondary text-white px-8 py-3 rounded-sm hover:bg-side-1 transition-all duration-300 font-bold group"
-      >
-        <Icon
-          icon="mdi:refresh"
-          className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500"
-        />
-        {t("errors.retry_fetch")}
-      </button>
-    </div>
-  </div>
-);
-
-const NotFoundView = ({ lang, t }: { lang: string; t: any }) => (
-  <div className="min-h-[70vh] flex items-center justify-center px-6">
-    <div className="max-w-md w-full text-center animate-fade-in-up">
-      <div className="bg-side-2/10 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border border-side-2/20">
-        <Icon
-          icon="mdi:file-search-outline"
-          className="w-12 h-12 text-side-2"
-        />
-      </div>
-      <h2 className="text-3xl font-bold font-primary text-secondary mb-4">
-        {t("service.not_found.title")}
-      </h2>
-      <p className="text-stone-500 font-secondary text-lg mb-10 leading-relaxed">
-        {t("service.not_found.description")}
-      </p>
-      <NavLink
-        to={`/${lang}/services`}
-        className="inline-flex items-center gap-2 bg-secondary text-white px-8 py-3 rounded-sm hover:bg-side-1 transition-all duration-300 font-bold group"
-      >
-        <Icon icon="mdi:arrow-right" className="w-5 h-5 rtl:rotate-180" />
-        {t("link.services")}
-      </NavLink>
-    </div>
-  </div>
-);
-
 export default function Service() {
-  const { service, serviceError } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
-  const { lang } = useParams();
-
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaqIndex(openFaqIndex === index ? null : index);
-  };
-
-  const handleRetry = () => {
-    window.location.reload();
-  };
+  const { service, serviceError } = useLoaderData<typeof loader>(),
+    { t } = useTranslation(),
+    { lang } = useParams(),
+    [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null),
+    toggleFaq = (index: number) => {
+      setOpenFaqIndex(openFaqIndex === index ? null : index);
+    },
+    handleRetry = () => {
+      window.location.reload();
+    };
 
   if (serviceError) {
     return <ErrorView onRetry={handleRetry} t={t} />;
@@ -139,18 +61,16 @@ export default function Service() {
     return <NotFoundView lang={lang || "en"} t={t} />;
   }
 
-  // Use DB values if available, otherwise fallback to static data
-  const serviceLabel = service.label;
-  const serviceIcon = service.icon;
-  const serviceOverview = service.overview;
-  const features: Features = JSON.parse(service.features || "[]");
-  const processSteps: ProcessSteps = JSON.parse(service.process || "[]");
-  const whyChooseUs: WhyChooseUs = JSON.parse(service.reasons || "[]");
-  const faqs: FAQs = JSON.parse(service.faq || "[]");
+  const serviceLabel = service.label,
+    serviceIcon = service.icon,
+    serviceOverview = service.overview,
+    features: Features = JSON.parse(service.features || "[]"),
+    processSteps: ProcessSteps = JSON.parse(service.process || "[]"),
+    whyChooseUs: WhyChooseUs = JSON.parse(service.reasons || "[]"),
+    faqs: FAQs = JSON.parse(service.faq || "[]");
 
   return (
     <div className="bg-stone-50">
-      {/* ──────────────── Hero Section ──────────────── */}
       <section className="relative h-[60vh] min-h-100 w-full flex items-end overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="w-full h-full animate-slow-zoom">
@@ -164,7 +84,6 @@ export default function Service() {
         </div>
 
         <div className="relative z-10 container mx-auto px-6 pb-16">
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-white/60 text-sm font-secondary mb-6 opacity-0 animate-fade-in-up">
             <NavLink
               to={`/${lang}`}
@@ -189,7 +108,6 @@ export default function Service() {
             <span className="text-side-2 font-bold">{serviceLabel}</span>
           </nav>
 
-          {/* Title */}
           <div
             className="flex items-center gap-4 mb-4 opacity-0 animate-fade-in-up"
             style={{ animationDelay: "200ms" }}
@@ -211,7 +129,6 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── Overview Section ──────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-start">
@@ -256,7 +173,6 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── Key Features Section ──────────────── */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -290,7 +206,6 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── Our Approach / Process Section ──────────────── */}
       <section className="py-20 px-6 bg-secondary">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -304,7 +219,6 @@ export default function Service() {
           </div>
 
           <div className="relative">
-            {/* Center line */}
             <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-white/10 hidden lg:block" />
 
             <div className="space-y-12 lg:space-y-0">
@@ -315,7 +229,6 @@ export default function Service() {
                     index % 2 === 0 ? "" : "lg:flex-row-reverse"
                   } ${index > 0 ? "lg:mt-12" : ""}`}
                 >
-                  {/* Content */}
                   <div
                     className={`flex-1 ${
                       index % 2 === 0
@@ -331,7 +244,6 @@ export default function Service() {
                     </p>
                   </div>
 
-                  {/* Number circle */}
                   <div className="relative z-10 shrink-0 order-first lg:order-0">
                     <div className="w-16 h-16 bg-side-2 rounded-full flex items-center justify-center shadow-lg shadow-side-2/30">
                       <span className="text-secondary font-bold font-primary text-2xl">
@@ -340,7 +252,6 @@ export default function Service() {
                     </div>
                   </div>
 
-                  {/* Spacer for alignment */}
                   <div className="flex-1 hidden lg:block" />
                 </div>
               ))}
@@ -349,7 +260,6 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── Why Choose Us Section ──────────────── */}
       <section className="py-20 px-6 bg-stone-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -386,7 +296,6 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── FAQ Section ──────────────── */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
@@ -442,9 +351,7 @@ export default function Service() {
         </div>
       </section>
 
-      {/* ──────────────── CTA Section ──────────────── */}
       <section className="py-20 px-6 bg-secondary relative overflow-hidden">
-        {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-side-2/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-side-2/5 rounded-full translate-x-1/3 translate-y-1/3" />
 

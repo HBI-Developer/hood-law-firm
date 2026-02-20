@@ -1,24 +1,14 @@
 import { AboutHero, IdentitySection, TeamSection } from "./components";
 import { getFixedT } from "~/i18n/server";
 import { data, type LoaderFunctionArgs } from "react-router";
-import { eq, type InferSelectModel } from "drizzle-orm";
-import { team } from "~/databases/schema";
-import { db } from "~/databases/config.server";
+import { hooddb } from "~/constants.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const t = await getFixedT(request);
-  const { lang } = params;
-
-  let teamCollection: Array<InferSelectModel<typeof team>> = [];
-  let teamError = false;
-
-  try {
-    teamCollection = await db.query.team.findMany({
-      where: eq(team.lang, lang || "en"),
-    });
-  } catch (_) {
-    teamError = true;
-  }
+  const t = await getFixedT(request),
+    { lang } = params,
+    [teamCollection, teamError] = await hooddb.getTeams(
+      (lang as Locale) || "en",
+    );
 
   return data({
     team: teamCollection,

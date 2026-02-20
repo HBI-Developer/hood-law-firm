@@ -1,10 +1,9 @@
-import type { Job } from "~/data/jobs";
-import { JOB_TYPES } from "~/data/jobs";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/store";
 import getOpportunities from "../../functions/getOpportunities";
+import { JOB_TYPES } from "~/constants";
 
 interface JobPanelProps {
   job: Job;
@@ -12,11 +11,10 @@ interface JobPanelProps {
 }
 
 export default function JobPanel({ job, onApply }: JobPanelProps) {
-  const { t } = useTranslation();
-  const language = useSelector((state: RootState) => state.language.locale);
-
-  const typeKey = JOB_TYPES[job.type as keyof typeof JOB_TYPES] || "full_time";
-  const typeLabel = t(`careers.${typeKey}`);
+  const { t } = useTranslation(),
+    language = useSelector((state: RootState) => state.language.locale),
+    typeKey = JOB_TYPES[job.type as keyof typeof JOB_TYPES] || "full_time",
+    typeLabel = t(`careers.${typeKey}`);
 
   return (
     <div className="bg-white rounded-sm shadow-sm border border-secondary/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md hover:border-side-2 transition-all duration-300 group">

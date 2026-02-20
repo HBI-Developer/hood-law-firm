@@ -1,5 +1,3 @@
-import type { Locale } from "~/constants";
-
 export default function getOpportunities(opportunities: number, lang: Locale) {
   switch (lang) {
     case "ar": {
