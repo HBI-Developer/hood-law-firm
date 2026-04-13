@@ -1,8 +1,1 @@
-.DS_Store
-.env
-.agent
-/node_modules/
-
-# React Router
-/.react-router/
-/build/
+Nothing should be ignored since only source code files (.tsx) were modified and no build artifacts, dependencies, or temporary files were present in the changes.

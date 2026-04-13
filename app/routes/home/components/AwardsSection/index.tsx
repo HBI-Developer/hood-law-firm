@@ -1,6 +1,6 @@
 import type { InferSelectModel } from "drizzle-orm";
 import { useKeenSlider, type KeenSliderOptions } from "keen-slider/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher, useLoaderData } from "react-router";
 import type { awards } from "~/databases/schema";
@@ -16,6 +16,7 @@ export default function AwardsSection() {
     AWARDS = fetcher.data?.awards ?? loaderData.awards,
     awardsError = fetcher.data?.awardsError ?? loaderData.awardsError,
     isLoading = fetcher.state !== "idle",
+    [isInitialized, setIsInitialized] = useState(false),
     handleRetry = () => {
       fetcher.load(window.location.pathname);
     },
@@ -33,7 +34,7 @@ export default function AwardsSection() {
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(options);
 
   useEffect(() => {
-    if (isLoaded && instanceRef.current) {
+    if (isLoaded && instanceRef.current && !isInitialized) {
       const slider = instanceRef.current;
 
       setTimeout(() => {
@@ -42,7 +43,8 @@ export default function AwardsSection() {
           rtl: i18n.language === "ar",
         });
         slider.moveToIdx(slider.track.details.abs - 5, true, animationConfig);
-      }, 50);
+        setIsInitialized(true);
+      }, 100);
 
       const restartAnimation = () => {
         slider.moveToIdx(slider.track.details.abs - 5, true, animationConfig);
@@ -56,7 +58,7 @@ export default function AwardsSection() {
         slider.on("updated", () => {});
       };
     }
-  }, [isLoaded, i18n.language]);
+  }, [isLoaded, i18n.language, isInitialized]);
 
   return (
     <section className="py-16 md:py-24 bg-white overflow-hidden select-none">

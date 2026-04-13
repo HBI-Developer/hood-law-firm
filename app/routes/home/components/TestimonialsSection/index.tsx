@@ -5,7 +5,7 @@ import "keen-slider/keen-slider.min.css";
 import { useFetcher, useLoaderData } from "react-router";
 import type { InferSelectModel } from "drizzle-orm";
 import type { testimonials } from "~/databases/schema";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const WheelControls: KeenSliderPlugin = (slider) => {
     const handleWheel = (e: WheelEvent) => {
@@ -61,6 +61,7 @@ export default function TestimonialsSection() {
     testimonialsError =
       fetcher.data?.testimonialsError ?? loaderData.testimonialsError,
     isLoading = fetcher.state !== "idle",
+    [isInitialized, setIsInitialized] = useState(false),
     handleRetry = () => {
       fetcher.load(window.location.pathname);
     },
@@ -92,13 +93,14 @@ export default function TestimonialsSection() {
     );
 
   useEffect(() => {
-    if (instanceRef.current) {
+    if (instanceRef.current && !isInitialized) {
       instanceRef.current.update({
         loop: REVIEWS.length > 1,
         rtl: isRtl,
       });
+      setIsInitialized(true);
     }
-  }, []);
+  }, [isInitialized, REVIEWS.length, isRtl]);
 
   return (
     <section className="py-24 bg-secondary relative overflow-hidden">
