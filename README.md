@@ -1,87 +1,123 @@
-# Welcome to React Router!
+# Hood Law Firm
 
-A modern, production-ready template for building full-stack React applications using React Router.
+This project is a professional website for a law firm built with modern web technologies. It combines a clean, polished user experience with several advanced features such as multilingual support, dynamic content sections, contact workflows, and a content-rich blog and careers experience.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Overview
 
-## Features
+The website is designed to present the law firm in a professional and trustworthy way while offering a smooth browsing experience for visitors. It includes dedicated pages for the firm’s story, services, legal information, contact details, blog articles, and career opportunities.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Key Features
+
+- Professional and responsive design for a modern legal brand
+- Multilingual experience with Arabic and English support
+- Dedicated pages for About, Services, Contact, Blog, Articles, Careers, and Legal resources
+- Dynamic content structure for articles and legal information
+- Reading experience enhancements such as reading progress and estimated reading time
+- Contact and application forms with validation and integrations
+- Modern frontend architecture based on React, TypeScript, and React Router
+- Server-rendered delivery for improved performance and SEO
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- React Router
+- Vite
+- Redux Toolkit
+- i18next for localization
+- Drizzle ORM and SQLite
+- Tailwind CSS
+- ReCAPTCHA and email-related integrations
+
+## Project Structure
+
+```text
+app/
+  assets/            # Static assets and media files
+  components/        # Reusable UI components
+  constants.ts       # Shared frontend constants
+  hooks/             # Custom React hooks
+  i18n/              # Localization files and setup
+  layouts/           # Main layout components
+  routes/            # Page-level route components
+  store/             # Redux store and slices
+  utils/             # Utility helpers
+  databases/         # Database schema and configuration
+  routes.ts          # Application route definitions
+public/             # Publicly served files
+```
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js 20 or newer
+- npm or pnpm
+
 ### Installation
 
-Install the dependencies:
+Install project dependencies:
 
 ```bash
 npm install
+
+# or
+
+pnpm install
 ```
 
 ### Development
 
-Start the development server with HMR:
+Run the development server:
 
 ```bash
 npm run dev
+
+# or
+
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Then open your browser at http://localhost:5173.
 
-## Building for Production
+### Production Build
 
 Create a production build:
 
 ```bash
 npm run build
+
+# or
+
+pnpm build
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+To start the production server after building:
 
 ```bash
-docker build -t my-app .
+npm run start
 
-# Run the container
-docker run -p 3000:3000 my-app
+# or
+
+pnpm start
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+### Optional Docker Usage
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+If you want to run the project in a container, you can use:
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+```bash
+docker build -t hood-law-firm .
+docker run -p 3000:3000 hood-law-firm
 ```
 
-## Styling
+## License
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+This project is open source and is licensed under the Apache License 2.0.
 
----
+You are free to use, modify, and distribute this project in accordance with the license terms, while preserving the attribution and contributor notice requirements.
 
-Built with ❤️ using React Router.
+The project includes contributions from its contributors, and the license applies to the codebase as a whole.
+
+See the [LICENSE](LICENSE) file for the full text.
+
