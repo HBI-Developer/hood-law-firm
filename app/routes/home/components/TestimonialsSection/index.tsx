@@ -5,7 +5,7 @@ import "keen-slider/keen-slider.min.css";
 import { useFetcher, useLoaderData } from "react-router";
 import type { InferSelectModel } from "drizzle-orm";
 import type { testimonials } from "~/databases/schema";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 const WheelControls: KeenSliderPlugin = (slider) => {
     const handleWheel = (e: WheelEvent) => {
@@ -68,8 +68,8 @@ export default function TestimonialsSection() {
       REVIEWS.length > 0 && REVIEWS.length < 10
         ? [...REVIEWS, ...REVIEWS]
         : REVIEWS,
-    [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
-      {
+    sliderOptions = useMemo(
+      () => ({
         loop: REVIEWS.length > 1,
         rtl: isRtl,
         mode: "free-snap",
@@ -87,18 +87,19 @@ export default function TestimonialsSection() {
             slides: { perView: 3, spacing: 40, origin: "center" },
           },
         },
-      },
-      [WheelControls, Autoplay],
-    );
+      }) as const,
+      [REVIEWS.length, isRtl],
+    ),
+    [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(sliderOptions, [
+      WheelControls,
+      Autoplay,
+    ]);
 
   useEffect(() => {
     if (instanceRef.current) {
-      instanceRef.current.update({
-        loop: REVIEWS.length > 1,
-        rtl: isRtl,
-      });
+      instanceRef.current.update(sliderOptions);
     }
-  }, []);
+  }, [instanceRef, sliderOptions]);
 
   return (
     <section className="py-24 bg-secondary relative overflow-hidden">
