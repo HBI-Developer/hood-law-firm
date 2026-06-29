@@ -198,3 +198,10 @@ html {
 .grecaptcha-badge {
   z-index: 21 !important;
 }
+
+.awards-section .keen-slider__slide {
+  width: auto !important;
+  min-width: var(--slide-width) !important;
+  max-width: var(--slide-width) !important;
+  overflow: visible !important;
+}
